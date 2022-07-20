@@ -1,9 +1,11 @@
-import pygame, sys
+import pygame
+import sys
+
 from pygame.locals import *
 
-def CREATE_CHESSBOARD(window_width, window_height, surface):
-    rect_width = window_width / 8
-    rect_height = window_height / 8
+def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
+    rect_width = (window_width - offset) / 8
+    rect_height = (window_height - offset) / 8
     x = y = 0
     color = None
     white = (255, 255, 255)
@@ -33,8 +35,3 @@ def CREATE_CHESSBOARD(window_width, window_height, surface):
         if i % 2 == 1:
             create_horizontal_rects(x, y, black, white)
             y += rect_width
-
-pygame.init()
-
-WIDTH = HEIGHT = 700
-WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))

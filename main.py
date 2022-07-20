@@ -1,10 +1,14 @@
-import pygame, sys
+import pygame
+import sys
 from pygame.locals import *
 
+import board
 
+pygame.init()
 
-
-
+WIDTH = HEIGHT = 700
+OFFSET = 20
+WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 def main():
     while True:
@@ -14,7 +18,7 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        CREATE_CHESSBOARD(WIDTH, HEIGHT, WINDOW)
+        board.CREATE_CHESSBOARD(WIDTH, HEIGHT, OFFSET, WINDOW)
 
         pygame.display.update()
 
