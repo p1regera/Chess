@@ -52,8 +52,8 @@ whitePawn = pygame.image.load(".\\icons\\whitepawn.png")
 whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
 
 def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
-    rect_width = (window_width - offset) / 8
-    rect_height = (window_height - offset) / 8
+    rect_width = (window_width - offset) // 8
+    rect_height = (window_height - offset) // 8
     x = y = 0
 
     color = None
@@ -85,6 +85,9 @@ def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
         if i % 2 == 1:
             create_horizontal_rects(x, y, blue, white)
             y += rect_width
+
+def MOVE_PIECES(window_width, window_height, offset, surface):
+    return
 
 def DISPLAY_PIECES(window_width, window_height, offset, surface):
     rect_width = (window_width - offset) / 8

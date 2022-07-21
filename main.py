@@ -32,6 +32,7 @@ def main():
                 board.display_piece_movement(rank, file)
 
         board.CREATE_CHESSBOARD(WIDTH, HEIGHT, OFFSET, WINDOW)
+        board.MOVE_PIECES(WIDTH, HEIGHT, OFFSET, WINDOW)
         board.DISPLAY_PIECES(WIDTH, HEIGHT, OFFSET, WINDOW)
 
         pygame.display.update()
