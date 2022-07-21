@@ -6,9 +6,13 @@ import board
 
 pygame.init()
 
+
 WIDTH = HEIGHT = 700
-OFFSET = 20
+OFFSET = 0
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+
+# set window title to "Chess"
+pygame.display.set_caption("Chess")
 
 def main():
     while True:
