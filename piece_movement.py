@@ -8,7 +8,6 @@ def is_opposite_color(piece, target_piece):
     else:
         return False
 
-
 def rook_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
     valid_moves = []
@@ -49,7 +48,6 @@ def rook_moves(board_array, piece_pos):
                 break
 
     return valid_moves
-
 
 def bishop_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
@@ -94,7 +92,6 @@ def bishop_moves(board_array, piece_pos):
 
     return valid_moves
 
-
 def queen_moves(board_array, piece_pos):
     # Combining the rook and bishop moves since a queen moves like both pieces
     valid_moves = rook_moves(board_array, piece_pos)
@@ -103,7 +100,6 @@ def queen_moves(board_array, piece_pos):
         valid_moves.append(move)
 
     return valid_moves
-
 
 def knight_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
