@@ -1,5 +1,6 @@
 import re
 import time
+from piece_movement import *
 
 def fen_to_array(fen):
     # Helper function, turns 'test' into ['t', 'e', 's', 't']
@@ -31,12 +32,58 @@ def fen_to_array(fen):
     return board_array
 
 
+def is_valid_move(previous_fen, current_fen):
+    # Turn FEN into array
+    prev_board = fen_to_array(previous_fen)
+    current_board = fen_to_array(current_fen)
+
+    # Find which piece moves, and the starting and end position
+
+    pass
+
+
+def find_valid_moves(board_array, piece_pos):
+    # returns 2d list of all valid moves a piece can make i.e. [[x,y], [x,y], ..]
+    piece = board_array[piece_pos[0]][piece_pos[1]]
+
+    if piece in ['P', 'p']:
+        return None
+    elif piece in ['R', 'r']:
+        return rook_moves(board_array, piece_pos)
+    elif piece in ['N', 'n']:
+        return None
+    elif piece in ['B', 'b']:
+        return bishop_moves(board_array, piece_pos)
+    elif piece in ['Q', 'q']:
+        return queen_moves(board_array, piece_pos)
+    elif piece in ['K', 'k']:
+        return None
+    else:
+        return None
+
+    # match piece:
+    #     case 'P':
+    #         pass
+    #     case 'R':
+    #         pass
+    #     case 'N':
+    #         pass
+    #     case 'B':
+    #         pass
+    #     case 'Q':
+    #         pass
+    #     case 'K':
+    #         pass
+
+
+
 def main():
 
-    starting_pos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    starting_pos = "rnbqkbnr/pppppppp/8/8/4q3/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
     start = time.time()
     print('\n'.join(' '.join(str(x) for x in row) for row in fen_to_array(starting_pos)))
+    print(find_valid_moves(fen_to_array(starting_pos), [4, 4]))
     end = time.time()
     print(end - start)
 
