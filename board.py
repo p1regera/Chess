@@ -13,42 +13,42 @@ current_position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 # load white/black pieces
 
-blackKing = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\blackking.png")
+blackKing = pygame.image.load(".\\icons\\blackking.png")
 blackKing = pygame.transform.scale(blackKing, (WIDTH / 8, HEIGHT / 8))
 
-blackQueen = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\blackqueen.png")
+blackQueen = pygame.image.load(".\\icons\\blackqueen.png")
 blackQueen = pygame.transform.scale(blackQueen, (WIDTH / 8, HEIGHT / 8))
 
-blackBishop = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\blackbishop.png")
+blackBishop = pygame.image.load(".\\icons\\blackbishop.png")
 blackBishop = pygame.transform.scale(blackBishop, (WIDTH / 8, HEIGHT / 8))
 
-blackKnight = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\blackknight.png")
+blackKnight = pygame.image.load(".\\icons\\blackknight.png")
 blackKnight = pygame.transform.scale(blackKnight, (WIDTH / 8, HEIGHT / 8))
 
-blackRook = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\blackrook.png")
+blackRook = pygame.image.load(".\\icons\\blackrook.png")
 blackRook = pygame.transform.scale(blackRook, (WIDTH / 8, HEIGHT / 8))
 
-blackPawn = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\blackpawn.png")
+blackPawn = pygame.image.load(".\\icons\\blackpawn.png")
 blackPawn = pygame.transform.scale(blackPawn, (WIDTH / 8, HEIGHT / 8))
 
 ########################################################################################################################
 
-whiteKing = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\whiteking.png")
+whiteKing = pygame.image.load(".\\icons\\whiteking.png")
 whiteKing = pygame.transform.scale(whiteKing, (WIDTH / 8, HEIGHT / 8))
 
-whiteQueen = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\whitequeen.png")
+whiteQueen = pygame.image.load(".\\icons\\whitequeen.png")
 whiteQueen = pygame.transform.scale(whiteQueen, (WIDTH / 8, HEIGHT / 8))
 
-whiteBishop = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\whitebishop.png")
+whiteBishop = pygame.image.load(".\\icons\\whitebishop.png")
 whiteBishop = pygame.transform.scale(whiteBishop, (WIDTH / 8, HEIGHT / 8))
 
-whiteKnight = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\whiteknight.png")
+whiteKnight = pygame.image.load(".\\icons\\whiteknight.png")
 whiteKnight = pygame.transform.scale(whiteKnight, (WIDTH / 8, HEIGHT / 8))
 
-whiteRook = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\whiterook.png")
+whiteRook = pygame.image.load(".\\icons\\whiterook.png")
 whiteRook = pygame.transform.scale(whiteRook, (WIDTH / 8, HEIGHT / 8))
 
-whitePawn = pygame.image.load("C:\\Users\\Void\\Desktop\\Game Making\\Chess\\Chess\\icons\\whitepawn.png")
+whitePawn = pygame.image.load(".\\icons\\whitepawn.png")
 whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
 
 def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
