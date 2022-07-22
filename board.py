@@ -3,6 +3,7 @@ import math
 import copy
 
 from Logic import fen_to_array, is_valid_move, is_in_check
+from piece_movement import promote
 
 # window / pygame variables
 WIDTH = HEIGHT = 800
@@ -28,68 +29,68 @@ pygame.mixer.init()
 
 # load white/black pieces
 
-blackKing = pygame.image.load(".\\icons\\blackking.png")
+blackKing = pygame.image.load("./icons/blackking.png")
 blackKing = pygame.transform.scale(blackKing, (WIDTH / 8, HEIGHT / 8))
 
-blackQueen = pygame.image.load(".\\icons\\blackqueen.png")
+blackQueen = pygame.image.load("./icons/blackqueen.png")
 blackQueen = pygame.transform.scale(blackQueen, (WIDTH / 8, HEIGHT / 8))
 
-blackBishop = pygame.image.load(".\\icons\\blackbishop.png")
+blackBishop = pygame.image.load("./icons/blackbishop.png")
 blackBishop = pygame.transform.scale(blackBishop, (WIDTH / 8, HEIGHT / 8))
 
-blackKnight = pygame.image.load(".\\icons\\blackknight.png")
+blackKnight = pygame.image.load("./icons/blackknight.png")
 blackKnight = pygame.transform.scale(blackKnight, (WIDTH / 8, HEIGHT / 8))
 
-blackRook = pygame.image.load(".\\icons\\blackrook.png")
+blackRook = pygame.image.load("./icons/blackrook.png")
 blackRook = pygame.transform.scale(blackRook, (WIDTH / 8, HEIGHT / 8))
 
-blackPawn = pygame.image.load(".\\icons\\blackpawn.png")
+blackPawn = pygame.image.load("./icons/blackpawn.png")
 blackPawn = pygame.transform.scale(blackPawn, (WIDTH / 8, HEIGHT / 8))
 
 ########################################################################################################################
 
-whiteKing = pygame.image.load(".\\icons\\whiteking.png")
+whiteKing = pygame.image.load("./icons/whiteking.png")
 whiteKing = pygame.transform.scale(whiteKing, (WIDTH / 8, HEIGHT / 8))
 
-whiteQueen = pygame.image.load(".\\icons\\whitequeen.png")
+whiteQueen = pygame.image.load("./icons/whitequeen.png")
 whiteQueen = pygame.transform.scale(whiteQueen, (WIDTH / 8, HEIGHT / 8))
 
-whiteBishop = pygame.image.load(".\\icons\\whitebishop.png")
+whiteBishop = pygame.image.load("./icons/whitebishop.png")
 whiteBishop = pygame.transform.scale(whiteBishop, (WIDTH / 8, HEIGHT / 8))
 
-whiteKnight = pygame.image.load(".\\icons\\whiteknight.png")
+whiteKnight = pygame.image.load("./icons/whiteknight.png")
 whiteKnight = pygame.transform.scale(whiteKnight, (WIDTH / 8, HEIGHT / 8))
 
-whiteRook = pygame.image.load(".\\icons\\whiterook.png")
+whiteRook = pygame.image.load("./icons/whiterook.png")
 whiteRook = pygame.transform.scale(whiteRook, (WIDTH / 8, HEIGHT / 8))
 
-whitePawn = pygame.image.load(".\\icons\\whitepawn.png")
+whitePawn = pygame.image.load("./icons/whitepawn.png")
 whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
 
 ############################################################################
 
 # load game sounds
-pygame.mixer.music.load(".\\sfx\\gamestart.wav")
-gameStartSound = pygame.mixer.Sound(".\\sfx\\gamestart.wav")
+pygame.mixer.music.load("./sfx/gamestart.wav")
+gameStartSound = pygame.mixer.Sound("./sfx/gamestart.wav")
 pygame.mixer.Sound.play(gameStartSound)
 
-pygame.mixer.music.load(".\\sfx\\regmove.wav")
-moveSound = pygame.mixer.Sound(".\\sfx\\regmove.wav")
+pygame.mixer.music.load("./sfx/regmove.wav")
+moveSound = pygame.mixer.Sound("./sfx/regmove.wav")
 
-pygame.mixer.music.load(".\\sfx\\capture.wav")
-captureSound = pygame.mixer.Sound(".\\sfx\\capture.wav")
+pygame.mixer.music.load("./sfx/capture.wav")
+captureSound = pygame.mixer.Sound("./sfx/capture.wav")
 
-pygame.mixer.music.load(".\\sfx\\castling.wav")
-castlingSound = pygame.mixer.Sound(".\\sfx\\castling.wav")
+pygame.mixer.music.load("./sfx/castling.wav")
+castlingSound = pygame.mixer.Sound("./sfx/castling.wav")
 
-pygame.mixer.music.load(".\\sfx\\check.wav")
-checkSound = pygame.mixer.Sound(".\\sfx\\check.wav")
+pygame.mixer.music.load("./sfx/check.wav")
+checkSound = pygame.mixer.Sound("./sfx/check.wav")
 
-pygame.mixer.music.load(".\\sfx\\checkmate.wav")
-checkmateSound = pygame.mixer.Sound(".\\sfx\\checkmate.wav")
+pygame.mixer.music.load("./sfx/checkmate.wav")
+checkmateSound = pygame.mixer.Sound("./sfx/checkmate.wav")
 
-pygame.mixer.music.load(".\\sfx\\stalemate.wav")
-stalemateSound = pygame.mixer.Sound(".\\sfx\\stalemate.wav")
+pygame.mixer.music.load("./sfx/stalemate.wav")
+stalemateSound = pygame.mixer.Sound("./sfx/stalemate.wav")
 
 
 def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
@@ -138,6 +139,14 @@ def MOVE_PIECES(window_width, window_height, offset, surface, mousePos):
         new_pos_array[selectedPiece[1][0]][selectedPiece[1][1]] = new_pos_array[selectedPiece[0][0]][selectedPiece[0][1]]
         new_pos_array[selectedPiece[0][0]][selectedPiece[0][1]] = '0'
         selectedPiece.clear()
+
+    # Update a pawn to queen if on the last rank
+    promote_coord = promote(new_pos_array)
+    if promote_coord != []:
+        if promote_coord[0] == 7:
+            new_pos_array[promote_coord[0]][promote_coord[1]] = 'q'
+        if promote_coord[0] == 0:
+            new_pos_array[promote_coord[0]][promote_coord[1]] = 'Q'
 
     print(current_position, new_pos_array)
 

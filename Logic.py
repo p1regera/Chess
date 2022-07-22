@@ -48,6 +48,10 @@ def is_valid_move(prev_board_array, cur_board_array, colorTurn):
                 print("prev: ", prev_pos)
                 piece = prev_board_array[i][j]
 
+    # If it's not your turn, then the move is invalid
+    if (piece.islower() and colorTurn == 'w') or (piece.isupper() and colorTurn == 'b'):
+        return False
+
     # Find the piece's end position
     for i in range(0, 8):
         for j in range(0, 8):
@@ -59,10 +63,20 @@ def is_valid_move(prev_board_array, cur_board_array, colorTurn):
                 print("cur: ", cur_pos)
 
     # If the piece moved to a valid position (based on what type of piece), then return true
-    if cur_pos in find_valid_moves(prev_board_array, prev_pos):
-        return True
-    else:
+    if cur_pos not in find_valid_moves(prev_board_array, prev_pos):
         return False
+
+    # If the player moving the piece is in check after the move, the move is invalid
+    check = is_in_check(cur_board_array)
+
+    if check == "Both" and colorTurn == 'b':
+        return False
+    if check == "White" and colorTurn == 'w':
+        return False
+    if check == "Black" and colorTurn == 'b':
+        return False
+
+    return True
 
 
 def find_valid_moves(board_array, piece_pos):

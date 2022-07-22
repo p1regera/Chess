@@ -4,6 +4,7 @@ def is_opposite_color(piece, target_piece):
 
     return piece.islower() != target_piece.islower()
 
+
 def rook_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
     valid_moves = []
@@ -45,6 +46,7 @@ def rook_moves(board_array, piece_pos):
 
     return valid_moves
 
+
 def bishop_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
     valid_moves = []
@@ -64,7 +66,7 @@ def bishop_moves(board_array, piece_pos):
                     target_x = x + i
                     target_y = y + i
                 elif direction == "down-left":
-                    current_piece = board_array[x + i][y - 1]
+                    current_piece = board_array[x + i][y - i]
                     target_x = x + i
                     target_y = y - i
                     if target_y < 0:
@@ -88,6 +90,7 @@ def bishop_moves(board_array, piece_pos):
 
     return valid_moves
 
+
 def queen_moves(board_array, piece_pos):
     # Combining the rook and bishop moves since a queen moves like both pieces
     valid_moves = rook_moves(board_array, piece_pos)
@@ -96,6 +99,7 @@ def queen_moves(board_array, piece_pos):
         valid_moves.append(move)
 
     return valid_moves
+
 
 def knight_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
@@ -121,6 +125,7 @@ def knight_moves(board_array, piece_pos):
 
     return valid_moves
 
+
 def pawn_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
     valid_moves = []
@@ -128,16 +133,18 @@ def pawn_moves(board_array, piece_pos):
     y = piece_pos[1]
 
     try:
-        if piece == 'p' and board_array[x + 1][y] == '0':
-            valid_moves.append([x + 1, y])
+        if piece == 'p':
+            if board_array[x + 1][y] == '0':
+                valid_moves.append([x + 1, y])
             if x == 1 and board_array[x + 2][y] == '0':
                 valid_moves.append([x + 2, y])
             if is_opposite_color(piece, board_array[x + 1][y + 1]):
                 valid_moves.append([x + 1, y + 1])
             if is_opposite_color(piece, board_array[x + 1][y - 1]):
                 valid_moves.append([x + 1, y - 1])
-        elif piece == 'P' and board_array[x - 1][y] == '0':
-            valid_moves.append([x - 1, y])
+        elif piece == 'P':
+            if board_array[x - 1][y] == '0':
+                valid_moves.append([x - 1, y])
             if x == 6 and board_array[x - 2][y] == '0':
                 valid_moves.append([x - 2, y])
             if is_opposite_color(piece, board_array[x - 1][y + 1]):
@@ -148,6 +155,18 @@ def pawn_moves(board_array, piece_pos):
         return valid_moves
 
     return valid_moves
+
+
+def promote(board_array):
+    # Returns the location of the pawn to promote
+    for i in range(0, 8):
+        if board_array[0][i] == "P":
+            return [0, i]
+        if board_array[7][i] == "p":
+            return [7, i]
+
+    return []
+
 
 def king_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
