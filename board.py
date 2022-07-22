@@ -71,6 +71,7 @@ whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
 # load game sounds
 pygame.mixer.music.load(".\\sfx\\gamestart.wav")
 gameStartSound = pygame.mixer.Sound(".\\sfx\\gamestart.wav")
+pygame.mixer.Sound.play(gameStartSound)
 
 pygame.mixer.music.load(".\\sfx\\regmove.wav")
 moveSound = pygame.mixer.Sound(".\\sfx\\regmove.wav")
@@ -194,6 +195,8 @@ def DISPLAY_PIECES(window_width, window_height, offset, surface):
 def RESET_PIECES():
     global current_position
     current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
+    pygame.mixer.Sound.play(gameStartSound)
 
 # helper function
 def display_piece_movement(rank, file):
