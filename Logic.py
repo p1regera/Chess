@@ -32,7 +32,7 @@ def fen_to_array(fen):
     return board_array
 
 
-def is_valid_move(prev_board_array, cur_board_array):
+def is_valid_move(prev_board_array, cur_board_array, colorTurn):
     if prev_board_array == cur_board_array:
         return False
     # Find which piece moves, and the starting and end position

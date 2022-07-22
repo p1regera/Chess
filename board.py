@@ -11,6 +11,7 @@ WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # board variables
 current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
 
 # load white/black pieces
@@ -90,6 +91,7 @@ def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
 
 def MOVE_PIECES(window_width, window_height, offset, surface, mousePos):
     # return the modified array after an attempted move
+    global current_position, colorTurn
 
     # modified array after move
     new_pos_array = copy.deepcopy(current_position)
@@ -101,16 +103,20 @@ def MOVE_PIECES(window_width, window_height, offset, surface, mousePos):
 
     if len(selectedPiece) == 2: # two squares have been selected
         new_pos_array[selectedPiece[1][0]][selectedPiece[1][1]] = new_pos_array[selectedPiece[0][0]][selectedPiece[0][1]]
-        new_pos_array[selectedPiece[0][0]][selectedPiece[0][1]] = 0
+        new_pos_array[selectedPiece[0][0]][selectedPiece[0][1]] = '0'
         selectedPiece.clear()
 
-        print(current_position)
-        print(new_pos_array)
-        print(is_valid_move(current_position, new_pos_array))
+    print(current_position, new_pos_array)
 
-    # display_piece_movement(rank, file)
+    if (is_valid_move(current_position, new_pos_array, colorTurn)):
+        current_position = new_pos_array\
 
-    return new_pos_array
+        if colorTurn == "w":
+            colorTurn = "b"
+        else:
+            colorTurn = "w"
+
+        print(colorTurn)
 
 def DISPLAY_PIECES(window_width, window_height, offset, surface):
     rect_width = (window_width - offset) / 8
@@ -154,5 +160,6 @@ def RESET_PIECES():
     global current_position
     current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 
+# helper function
 def display_piece_movement(rank, file):
     print(current_position[rank][file])
