@@ -24,6 +24,8 @@ current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w K
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
 
+pygame.mixer.init()
+
 # load white/black pieces
 
 blackKing = pygame.image.load(".\\icons\\blackking.png")
@@ -63,6 +65,31 @@ whiteRook = pygame.transform.scale(whiteRook, (WIDTH / 8, HEIGHT / 8))
 
 whitePawn = pygame.image.load(".\\icons\\whitepawn.png")
 whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
+
+############################################################################
+
+# load game sounds
+pygame.mixer.music.load(".\\sfx\\gamestart.wav")
+gameStartSound = pygame.mixer.Sound(".\\sfx\\gamestart.wav")
+
+pygame.mixer.music.load(".\\sfx\\regmove.wav")
+moveSound = pygame.mixer.Sound(".\\sfx\\regmove.wav")
+
+pygame.mixer.music.load(".\\sfx\\capture.wav")
+captureSound = pygame.mixer.Sound(".\\sfx\\capture.wav")
+
+pygame.mixer.music.load(".\\sfx\\castling.wav")
+castlingSound = pygame.mixer.Sound(".\\sfx\\castling.wav")
+
+pygame.mixer.music.load(".\\sfx\\check.wav")
+checkSound = pygame.mixer.Sound(".\\sfx\\check.wav")
+
+pygame.mixer.music.load(".\\sfx\\checkmate.wav")
+checkmateSound = pygame.mixer.Sound(".\\sfx\\checkmate.wav")
+
+pygame.mixer.music.load(".\\sfx\\stalemate.wav")
+stalemateSound = pygame.mixer.Sound(".\\sfx\\stalemate.wav")
+
 
 def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
     rect_width = (window_width - offset) / 8
@@ -115,6 +142,8 @@ def MOVE_PIECES(window_width, window_height, offset, surface, mousePos):
 
     if (is_valid_move(current_position, new_pos_array, colorTurn)):
         current_position = new_pos_array
+
+        pygame.mixer.Sound.play(moveSound)
 
         if colorTurn == "w":
             colorTurn = "b"
