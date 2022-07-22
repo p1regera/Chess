@@ -1,5 +1,4 @@
 import re
-import time
 from piece_movement import *
 
 def fen_to_array(fen):

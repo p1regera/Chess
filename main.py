@@ -1,15 +1,9 @@
 import pygame
-import math
 import sys
-from pygame.locals import *
 
 import board
 
 pygame.init()
-
-WIDTH = HEIGHT = 700
-OFFSET = 0
-WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # set window title to "Chess"
 pygame.display.set_caption("Chess")
@@ -22,21 +16,17 @@ def main():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos()
-                # print("row: " + str(math.floor(pos[1] / (HEIGHT / 8))))
-                # print("column: " + str(math.floor(pos[0] / (WIDTH / 8))))
+                mousePos = pygame.mouse.get_pos()
+                board.MOVE_PIECES(board.WIDTH, board.HEIGHT, board.OFFSET, board.WINDOW, mousePos)
+            if event.type == pygame.KEYDOWN:
+                # press R to reset board to starting position
+                if event.key == pygame.K_r:
+                    board.RESET_PIECES()
 
-                rank = math.floor(pos[1] / (HEIGHT / 8))
-                file = math.floor(pos[0] / (WIDTH / 8))
-
-                board.display_piece_movement(rank, file)
-
-        board.CREATE_CHESSBOARD(WIDTH, HEIGHT, OFFSET, WINDOW)
-        board.MOVE_PIECES(WIDTH, HEIGHT, OFFSET, WINDOW)
-        board.DISPLAY_PIECES(WIDTH, HEIGHT, OFFSET, WINDOW)
+        board.CREATE_CHESSBOARD(board.WIDTH, board.HEIGHT, board.OFFSET, board.WINDOW)
+        board.DISPLAY_PIECES(board.WIDTH, board.HEIGHT, board.OFFSET, board.WINDOW)
 
         pygame.display.update()
-
 
 if __name__ == '__main__':
     main()
