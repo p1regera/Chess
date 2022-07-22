@@ -10,6 +10,7 @@ pygame.display.set_caption("Chess")
 
 def main():
     while True:
+        board.CREATE_CHESSBOARD(board.WIDTH, board.HEIGHT, board.OFFSET, board.WINDOW)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -23,7 +24,6 @@ def main():
                 if event.key == pygame.K_r:
                     board.RESET_PIECES()
 
-        board.CREATE_CHESSBOARD(board.WIDTH, board.HEIGHT, board.OFFSET, board.WINDOW)
         board.DISPLAY_PIECES(board.WIDTH, board.HEIGHT, board.OFFSET, board.WINDOW)
 
         pygame.display.update()

@@ -2,12 +2,22 @@ import pygame
 import math
 import copy
 
-from Logic import fen_to_array, is_valid_move
+from Logic import fen_to_array, is_valid_move, is_in_check
 
 # window / pygame variables
-WIDTH = HEIGHT = 700
+WIDTH = HEIGHT = 800
 OFFSET = 0
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+
+# board colors
+color = None
+white = (255, 255, 255)
+black = (0, 0, 0)
+blue = (75, 115, 153)
+
+# effect colors
+selectedBlue = (117, 199, 232)
+inCheckRed = (237, 62, 54)
 
 # board variables
 current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
@@ -55,14 +65,9 @@ whitePawn = pygame.image.load(".\\icons\\whitepawn.png")
 whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
 
 def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
-    rect_width = (window_width - offset) // 8
-    rect_height = (window_height - offset) // 8
+    rect_width = (window_width - offset) / 8
+    rect_height = (window_height - offset) / 8
     x = y = 0
-
-    color = None
-    white = (255, 255, 255)
-    black = (0, 0, 0)
-    blue = (75, 115, 153)
 
     def create_horizontal_rects(x, y, color, color2):
         for i in range(8):
@@ -109,14 +114,12 @@ def MOVE_PIECES(window_width, window_height, offset, surface, mousePos):
     print(current_position, new_pos_array)
 
     if (is_valid_move(current_position, new_pos_array, colorTurn)):
-        current_position = new_pos_array\
+        current_position = new_pos_array
 
         if colorTurn == "w":
             colorTurn = "b"
         else:
             colorTurn = "w"
-
-        print(colorTurn)
 
 def DISPLAY_PIECES(window_width, window_height, offset, surface):
     rect_width = (window_width - offset) / 8
@@ -124,6 +127,9 @@ def DISPLAY_PIECES(window_width, window_height, offset, surface):
     x = y = 0
 
     current_position_array = current_position
+
+    if len(selectedPiece) == 1: # one piece is selected, not yet moved
+        pygame.draw.rect(surface, selectedBlue, pygame.Rect(selectedPiece[0][1] * WIDTH // 8, selectedPiece[0][0] * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
 
     # TODO: Figure out why loop needs all if, instead of elif...
     for i in range(8):
