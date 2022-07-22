@@ -8,6 +8,7 @@ def is_opposite_color(piece, target_piece):
     else:
         return False
 
+
 def rook_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
     valid_moves = []
@@ -48,6 +49,7 @@ def rook_moves(board_array, piece_pos):
                 break
 
     return valid_moves
+
 
 def bishop_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
@@ -92,6 +94,7 @@ def bishop_moves(board_array, piece_pos):
 
     return valid_moves
 
+
 def queen_moves(board_array, piece_pos):
     # Combining the rook and bishop moves since a queen moves like both pieces
     valid_moves = rook_moves(board_array, piece_pos)
@@ -101,9 +104,27 @@ def queen_moves(board_array, piece_pos):
 
     return valid_moves
 
+
 def knight_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
     valid_moves = []
     x = piece_pos[0]
     y = piece_pos[1]
-    pass
+
+    # Coordinate offsets for the eight positions a knight can move relative to itself
+    for coord_offset in [[-2, 1], [-1, 2], [1, 2], [2, 1], [2, -1], [1, -2], [-1, -2], [-2, -1]]:
+        coord_offset_x = x + coord_offset[0]
+        coord_offset_y = y + coord_offset[1]
+        # Using try statement to catch any index errors since the pieces cannot move off the board
+        try:
+            # Prevents the python wraparound for lists -> i.e. list[-1] is the last item
+            if coord_offset_x < 0 or coord_offset_y < 0:
+                continue
+            # If the square is empty (a zero) or the opposite color piece, add it to the list of valid moves
+            elif (board_array[coord_offset_x][coord_offset_y] == "0" or
+                    is_opposite_color(piece, board_array[coord_offset_x][coord_offset_y])):
+                valid_moves.append([coord_offset_x, coord_offset_y])
+        except IndexError:
+            continue
+
+    return valid_moves
