@@ -3,7 +3,9 @@ import time
 
 
 def is_opposite_color(piece, target_piece):
-    if piece.islower() != target_piece.islower():
+    if piece == '0' or target_piece == '0':
+        return False
+    elif piece.islower() != target_piece.islower():
         return True
     else:
         return False
@@ -128,3 +130,53 @@ def knight_moves(board_array, piece_pos):
             continue
 
     return valid_moves
+
+
+def pawn_moves(board_array, piece_pos):
+    piece = board_array[piece_pos[0]][piece_pos[1]]
+    valid_moves = []
+    x = piece_pos[0]
+    y = piece_pos[1]
+
+    try:
+        if piece == 'p' and board_array[x + 1][y] == '0':
+            valid_moves.append([x + 1, y])
+            if x == 1 and board_array[x + 2][y] == '0':
+                valid_moves.append([x + 2, y])
+            if is_opposite_color(piece, board_array[x + 1][y + 1]):
+                valid_moves.append([x + 1, y + 1])
+            if is_opposite_color(piece, board_array[x + 1][y - 1]):
+                valid_moves.append([x + 1, y - 1])
+        elif piece == 'P' and board_array[x - 1][y] == '0':
+            valid_moves.append([x - 1, y])
+            if x == 6 and board_array[x - 2][y] == '0':
+                valid_moves.append([x - 2, y])
+            if is_opposite_color(piece, board_array[x - 1][y + 1]):
+                valid_moves.append([x - 1, y + 1])
+            if is_opposite_color(piece, board_array[x - 1][y - 1]):
+                valid_moves.append([x - 1, y - 1])
+    except IndexError:
+        return valid_moves
+
+    return valid_moves
+
+
+def king_moves(board_array, piece_pos):
+    piece = board_array[piece_pos[0]][piece_pos[1]]
+    valid_moves = []
+    x = piece_pos[0]
+    y = piece_pos[1]
+
+    # First take all the spaces a queen can move to
+    valid_moves = queen_moves(board_array, piece_pos)
+    for coord in valid_moves:
+        if coord[0] > x + 1 or coord[0] < x - 1:
+            valid_moves.remove(coord)
+        elif coord[1] > y + 1 or coord[1] < y - 1:
+            valid_moves.remove(coord)
+
+    return valid_moves
+
+
+
+

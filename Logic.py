@@ -33,9 +33,9 @@ def fen_to_array(fen):
 
 
 def is_valid_move(prev_board_array, cur_board_array):
+    if prev_board_array == cur_board_array:
+        return False
     # Find which piece moves, and the starting and end position
-    prev_piece_pos = []
-    cur_piece_pos = []
     prev_pos = [10, 10]
     cur_pos = [10, 10]
     # Find the piece's start position
@@ -69,7 +69,7 @@ def find_valid_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
 
     if piece in ['P', 'p']:
-        return rook_moves(board_array, piece_pos)
+        return pawn_moves(board_array, piece_pos)
     elif piece in ['R', 'r']:
         return rook_moves(board_array, piece_pos)
     elif piece in ['N', 'n']:
@@ -79,21 +79,64 @@ def find_valid_moves(board_array, piece_pos):
     elif piece in ['Q', 'q']:
         return queen_moves(board_array, piece_pos)
     elif piece in ['K', 'k']:
-        return queen_moves(board_array, piece_pos)
+        return king_moves(board_array, piece_pos)
     else:
-        return None
+        return []
+
+
+def is_in_check(board_array):
+    # Returns White/Black/Both/None depending on which king(s) are in check
+    # Find the kings
+    white_king_pos = []
+    white_valid_moves = []
+    black_king_pos = []
+    black_valid_moves = []
+    for i in range(0, 8):
+        for j in range(0, 8):
+            cur_piece = board_array[i][j]
+            if cur_piece == 'K':
+                white_king_pos = [i, j]
+            elif cur_piece == 'k':
+                black_king_pos = [i, j]
+            elif cur_piece.isupper():
+                for coord in find_valid_moves(board_array, [i, j]):
+                    white_valid_moves.append(coord)
+            else:
+                for coord in find_valid_moves(board_array, [i, j]):
+                    black_valid_moves.append(coord)
+
+    white_checked = False
+    black_checked = False
+    print(black_king_pos)
+    print(white_valid_moves)
+
+    if white_king_pos in black_valid_moves:
+        white_checked = True
+    if black_king_pos in white_valid_moves:
+        black_checked = True
+
+    if white_checked and black_checked:
+        return "Both"
+    if white_checked:
+        return "White"
+    if black_checked:
+        return "Black"
+    else:
+        return "Neither"
 
 
 def main():
-
-    starting_pos = "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 1"
-    sec_pos = "rnbqkbnr/pppppppp/8/3Q4/3P4/8/PPP1PPPP/RNB1KBNR w KQkq - 0 1"
+    default = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    starting_pos = "rnbqkbnr/ppppp1pp/5p2/Q7/8/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1"
+    sec_pos = "rnbqkbnr/ppppp1pp/5p2/7Q/8/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1"
 
     start = time.time()
     print('\n'.join(' '.join(str(x) for x in row) for row in fen_to_array(starting_pos)))
-    print(find_valid_moves(fen_to_array(starting_pos), [7, 3]))
+    print(find_valid_moves(fen_to_array(sec_pos), [3, 7]))
     print(is_valid_move(fen_to_array(starting_pos), fen_to_array(sec_pos)))
+    print(rook_moves(fen_to_array(sec_pos), [0, 0]))
     print('\n'.join(' '.join(str(x) for x in row) for row in fen_to_array(sec_pos)))
+    print(is_in_check(fen_to_array(sec_pos)), "is in check")
     end = time.time()
     print(end - start)
 
