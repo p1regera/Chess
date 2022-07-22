@@ -1,4 +1,5 @@
 import re
+import time
 from piece_movement import *
 
 def fen_to_array(fen):
@@ -37,6 +38,7 @@ def is_valid_move(prev_board_array, cur_board_array):
     # Find which piece moves, and the starting and end position
     prev_pos = [10, 10]
     cur_pos = [10, 10]
+
     # Find the piece's start position
     for i in range(0, 8):
         for j in range(0, 8):

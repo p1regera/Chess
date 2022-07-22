@@ -1,7 +1,8 @@
 import pygame
 import math
+import copy
 
-from Logic import fen_to_array
+from Logic import fen_to_array, is_valid_move
 
 # window / pygame variables
 WIDTH = HEIGHT = 700
@@ -11,8 +12,6 @@ WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 # board variables
 current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
-hasSelectedPiece = False
-
 
 # load white/black pieces
 
@@ -91,8 +90,9 @@ def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
 
 def MOVE_PIECES(window_width, window_height, offset, surface, mousePos):
     # return the modified array after an attempted move
+
     # modified array after move
-    cur_board_array = current_position.copy()
+    new_pos_array = copy.deepcopy(current_position)
 
     rank = math.floor(mousePos[1] / (HEIGHT / 8))
     file = math.floor(mousePos[0] / (WIDTH / 8))
@@ -100,13 +100,17 @@ def MOVE_PIECES(window_width, window_height, offset, surface, mousePos):
     selectedPiece.append([rank, file])
 
     if len(selectedPiece) == 2: # two squares have been selected
-        cur_board_array[selectedPiece[1][0]][selectedPiece[1][1]] = cur_board_array[selectedPiece[0][0]][selectedPiece[0][1]]
-        cur_board_array[selectedPiece[0][0]][selectedPiece[0][1]] = 0
+        new_pos_array[selectedPiece[1][0]][selectedPiece[1][1]] = new_pos_array[selectedPiece[0][0]][selectedPiece[0][1]]
+        new_pos_array[selectedPiece[0][0]][selectedPiece[0][1]] = 0
         selectedPiece.clear()
 
-    display_piece_movement(rank, file)
+        print(current_position)
+        print(new_pos_array)
+        print(is_valid_move(current_position, new_pos_array))
 
-    return cur_board_array
+    # display_piece_movement(rank, file)
+
+    return new_pos_array
 
 def DISPLAY_PIECES(window_width, window_height, offset, surface):
     rect_width = (window_width - offset) / 8
