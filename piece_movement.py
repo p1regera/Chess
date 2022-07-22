@@ -5,11 +5,8 @@ import time
 def is_opposite_color(piece, target_piece):
     if piece == '0' or target_piece == '0':
         return False
-    elif piece.islower() != target_piece.islower():
-        return True
-    else:
-        return False
 
+    return piece.islower() != target_piece.islower()
 
 def rook_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
