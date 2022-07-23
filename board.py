@@ -2,12 +2,14 @@ import pygame
 import math
 import copy
 
-from Logic import fen_to_array, is_valid_move, is_in_check
+from Logic import *
 from piece_movement import promote
 
 # window / pygame variables
 WIDTH = HEIGHT = 800
 OFFSET = 0
+RECT_WIDTH = (WIDTH - OFFSET) / 8
+RECT_HEIGHT = (HEIGHT - OFFSET) / 8
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # board colors
@@ -93,23 +95,21 @@ pygame.mixer.music.load("./sfx/stalemate.wav")
 stalemateSound = pygame.mixer.Sound("./sfx/stalemate.wav")
 
 
-def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
-    rect_width = (window_width - offset) / 8
-    rect_height = (window_height - offset) / 8
+def CREATE_CHESSBOARD():
     x = y = 0
 
     def create_horizontal_rects(x, y, color, color2):
         for i in range(8):
 
-            rects = pygame.Rect(x, y, rect_width, rect_height)
+            rects = pygame.Rect(x, y, RECT_WIDTH, RECT_HEIGHT)
 
             if i % 2 == 0:
-                pygame.draw.rect(surface, color, rects)
-                x += rect_width
+                pygame.draw.rect(WINDOW, color, rects)
+                x += RECT_WIDTH
 
             else:
-                pygame.draw.rect(surface, color2, rects)
-                x += rect_width
+                pygame.draw.rect(WINDOW, color2, rects)
+                x += RECT_WIDTH
 
     x = 0
 
@@ -117,18 +117,18 @@ def CREATE_CHESSBOARD(window_width, window_height, offset, surface):
 
         if i % 2 == 0:
             create_horizontal_rects(x, y, white, blue)
-            y += rect_height
+            y += RECT_HEIGHT
 
         if i % 2 == 1:
             create_horizontal_rects(x, y, blue, white)
-            y += rect_width
+            y += RECT_WIDTH
 
-def MOVE_PIECES(window_width, window_height, offset, surface, mousePos):
+def MOVE_PIECES(mousePos):
     # return the modified array after an attempted move
     global current_position, colorTurn
 
     # modified array after move
-    new_pos_array = copy.deepcopy(current_position)
+    new_current_position = copy.deepcopy(current_position)
 
     rank = math.floor(mousePos[1] / (HEIGHT / 8))
     file = math.floor(mousePos[0] / (WIDTH / 8))
@@ -136,23 +136,20 @@ def MOVE_PIECES(window_width, window_height, offset, surface, mousePos):
     selectedPiece.append([rank, file])
 
     if len(selectedPiece) == 2: # two squares have been selected
-        new_pos_array[selectedPiece[1][0]][selectedPiece[1][1]] = new_pos_array[selectedPiece[0][0]][selectedPiece[0][1]]
-        new_pos_array[selectedPiece[0][0]][selectedPiece[0][1]] = '0'
+        new_current_position[selectedPiece[1][0]][selectedPiece[1][1]] = new_current_position[selectedPiece[0][0]][selectedPiece[0][1]]
+        new_current_position[selectedPiece[0][0]][selectedPiece[0][1]] = '0'
         selectedPiece.clear()
 
     # Update a pawn to queen if on the last rank
-    promote_coord = promote(new_pos_array)
+    promote_coord = promote(new_current_position)
     if promote_coord != []:
         if promote_coord[0] == 7:
-            new_pos_array[promote_coord[0]][promote_coord[1]] = 'q'
+            new_current_position[promote_coord[0]][promote_coord[1]] = 'q'
         if promote_coord[0] == 0:
-            new_pos_array[promote_coord[0]][promote_coord[1]] = 'Q'
+            new_current_position[promote_coord[0]][promote_coord[1]] = 'Q'
 
-    print(current_position, new_pos_array)
-
-    if (is_valid_move(current_position, new_pos_array, colorTurn)):
-        current_position = new_pos_array
-
+    if is_valid_move(current_position, new_current_position, colorTurn):
+        current_position = new_current_position
         pygame.mixer.Sound.play(moveSound)
 
         if colorTurn == "w":
@@ -160,45 +157,41 @@ def MOVE_PIECES(window_width, window_height, offset, surface, mousePos):
         else:
             colorTurn = "w"
 
-def DISPLAY_PIECES(window_width, window_height, offset, surface):
-    rect_width = (window_width - offset) / 8
-    rect_height = (window_height - offset) / 8
-    x = y = 0
 
-    current_position_array = current_position
-
+def DISPLAY_EFFECTS():
     if len(selectedPiece) == 1: # one piece is selected, not yet moved
-        pygame.draw.rect(surface, selectedBlue, pygame.Rect(selectedPiece[0][1] * WIDTH // 8, selectedPiece[0][0] * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
+        pygame.draw.rect(WINDOW, selectedBlue, pygame.Rect(selectedPiece[0][1] * WIDTH // 8, selectedPiece[0][0] * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
 
-    # TODO: Figure out why loop needs all if, instead of elif...
+def DISPLAY_PIECES():
+    # display all the piece icons
     for i in range(8):
         for j in range(8):
             # black pieces
-            if current_position_array[i][j] == "k":
-                surface.blit(blackKing, (j * window_width / 8, i * window_height / 8))
-            if current_position_array[i][j] == "q":
-                surface.blit(blackQueen, (j * window_width / 8, i * window_height / 8))
-            if current_position_array[i][j] == "r":
-                surface.blit(blackRook, (j * window_width / 8, i * window_height / 8))
-            if current_position_array[i][j] == "b":
-                surface.blit(blackBishop, (j * window_width / 8, i * window_height / 8))
-            if current_position_array[i][j] == "n":
-                surface.blit(blackKnight, (j * window_width / 8, i * window_height / 8))
-            if current_position_array[i][j] == "p":
-                surface.blit(blackPawn, (j * window_width / 8, i * window_height / 8))
+            if current_position[i][j] == "k":
+                WINDOW.blit(blackKing, (j * WIDTH / 8, i * HEIGHT / 8))
+            if current_position[i][j] == "q":
+                WINDOW.blit(blackQueen, (j * WIDTH / 8, i * HEIGHT / 8))
+            if current_position[i][j] == "r":
+                WINDOW.blit(blackRook, (j * WIDTH / 8, i * HEIGHT / 8))
+            if current_position[i][j] == "b":
+                WINDOW.blit(blackBishop, (j * WIDTH / 8, i * HEIGHT / 8))
+            if current_position[i][j] == "n":
+                WINDOW.blit(blackKnight, (j * WIDTH / 8, i * HEIGHT / 8))
+            if current_position[i][j] == "p":
+                WINDOW.blit(blackPawn, (j * WIDTH / 8, i * HEIGHT / 8))
             # white pieces
-            if current_position_array[i][j] == "K":
-                surface.blit(whiteKing, (j * window_width / 8, i * window_height / 8))
-            if current_position_array[i][j] == "Q":
-                surface.blit(whiteQueen, (j * window_width / 8, i * window_height / 8))
-            if current_position_array[i][j] == "R":
-                surface.blit(whiteRook, (j * window_width / 8, i * window_height / 8))
-            if current_position_array[i][j] == "B":
-                surface.blit(whiteBishop, (j * window_width / 8, i * window_height / 8))
-            if current_position_array[i][j] == "N":
-                surface.blit(whiteKnight, (j * window_width / 8, i * window_height / 8))
-            if current_position_array[i][j] == "P":
-                surface.blit(whitePawn, (j * window_width / 8, i * window_height / 8))
+            if current_position[i][j] == "K":
+                WINDOW.blit(whiteKing, (j * WIDTH / 8, i * HEIGHT / 8))
+            if current_position[i][j] == "Q":
+                WINDOW.blit(whiteQueen, (j * WIDTH / 8, i * HEIGHT / 8))
+            if current_position[i][j] == "R":
+                WINDOW.blit(whiteRook, (j * WIDTH / 8, i * HEIGHT / 8))
+            if current_position[i][j] == "B":
+                WINDOW.blit(whiteBishop, (j * WIDTH / 8, i * HEIGHT / 8))
+            if current_position[i][j] == "N":
+                WINDOW.blit(whiteKnight, (j * WIDTH / 8, i * HEIGHT / 8))
+            if current_position[i][j] == "P":
+                WINDOW.blit(whitePawn, (j * WIDTH / 8, i * HEIGHT / 8))
 
 # reset board to starting position
 def RESET_PIECES():
@@ -208,5 +201,5 @@ def RESET_PIECES():
     pygame.mixer.Sound.play(gameStartSound)
 
 # helper function
-def display_piece_movement(rank, file):
+def DISPLAY_PIECE_MOVEMENT(rank, file):
     print(current_position[rank][file])

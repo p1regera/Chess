@@ -7,10 +7,11 @@ pygame.init()
 
 # set window title to "Chess"
 pygame.display.set_caption("Chess")
+pygame.display.set_icon(board.blackPawn)
 
 def main():
     while True:
-        board.CREATE_CHESSBOARD(board.WIDTH, board.HEIGHT, board.OFFSET, board.WINDOW)
+        board.CREATE_CHESSBOARD()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -18,13 +19,14 @@ def main():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mousePos = pygame.mouse.get_pos()
-                board.MOVE_PIECES(board.WIDTH, board.HEIGHT, board.OFFSET, board.WINDOW, mousePos)
+                board.MOVE_PIECES(mousePos)
             if event.type == pygame.KEYDOWN:
                 # press R to reset board to starting position
                 if event.key == pygame.K_r:
                     board.RESET_PIECES()
 
-        board.DISPLAY_PIECES(board.WIDTH, board.HEIGHT, board.OFFSET, board.WINDOW)
+        board.DISPLAY_EFFECTS()
+        board.DISPLAY_PIECES()
 
         pygame.display.update()
 

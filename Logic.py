@@ -45,7 +45,7 @@ def is_valid_move(prev_board_array, cur_board_array, colorTurn):
             # If this current spot on the board is 0 and last move it was not 0, this is where the piece moved from
             if cur_board_array[i][j] == "0" and prev_board_array[i][j] != "0":
                 prev_pos = [i, j]
-                print("prev: ", prev_pos)
+                # print("prev: ", prev_pos)
                 piece = prev_board_array[i][j]
 
     # If it's not your turn, then the move is invalid
@@ -60,7 +60,7 @@ def is_valid_move(prev_board_array, cur_board_array, colorTurn):
             if ((prev_board_array[i][j] == "0" or is_opposite_color(prev_board_array[i][j], piece)) and
                     (cur_board_array[i][j] != "0" and not is_opposite_color(cur_board_array[i][j], piece))):
                 cur_pos = [i, j]
-                print("cur: ", cur_pos)
+                # print("cur: ", cur_pos)
 
     # If the piece moved to a valid position (based on what type of piece), then return true
     if cur_pos not in find_valid_moves(prev_board_array, prev_pos):
@@ -122,8 +122,8 @@ def is_in_check(board_array):
 
     white_checked = False
     black_checked = False
-    print(black_king_pos)
-    print(white_valid_moves)
+    # print(black_king_pos)
+    # print(white_valid_moves)
 
     if white_king_pos in black_valid_moves:
         white_checked = True
@@ -146,14 +146,14 @@ def main():
     sec_pos = "rnbqkbnr/ppppp1pp/5p2/7Q/8/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1"
 
     start = time.time()
-    print('\n'.join(' '.join(str(x) for x in row) for row in fen_to_array(starting_pos)))
-    print(find_valid_moves(fen_to_array(sec_pos), [3, 7]))
-    print(is_valid_move(fen_to_array(starting_pos), fen_to_array(sec_pos)))
-    print(rook_moves(fen_to_array(sec_pos), [0, 0]))
-    print('\n'.join(' '.join(str(x) for x in row) for row in fen_to_array(sec_pos)))
-    print(is_in_check(fen_to_array(sec_pos)), "is in check")
+    #print('\n'.join(' '.join(str(x) for x in row) for row in fen_to_array(starting_pos)))
+    #print(find_valid_moves(fen_to_array(sec_pos), [3, 7]))
+    #print(is_valid_move(fen_to_array(starting_pos), fen_to_array(sec_pos)))
+    #print(rook_moves(fen_to_array(sec_pos), [0, 0]))
+    #print('\n'.join(' '.join(str(x) for x in row) for row in fen_to_array(sec_pos)))
+    #print(is_in_check(fen_to_array(sec_pos)), "is in check")
     end = time.time()
-    print(end - start)
+    #print(end - start)
 
 
 if __name__ == '__main__':
