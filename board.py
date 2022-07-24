@@ -11,6 +11,7 @@ OFFSET = 0
 RECT_WIDTH = (WIDTH - OFFSET) / 8
 RECT_HEIGHT = (HEIGHT - OFFSET) / 8
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+TRANSPARENT = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
 
 # board colors
 color = None
@@ -21,11 +22,14 @@ blue = (75, 115, 153)
 # effect colors
 selectedBlue = (117, 199, 232)
 inCheckRed = (237, 62, 54)
+captureRed = (247, 100, 99)
 
 # board variables
 current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
+canWLongCastle = canWShortCastle = True
+canBLongCastle = canBShortCastle = True
 
 pygame.mixer.init()
 
@@ -150,7 +154,10 @@ def MOVE_PIECES(mousePos):
 
     if is_valid_move(current_position, new_current_position, colorTurn):
         current_position = new_current_position
-        pygame.mixer.Sound.play(moveSound)
+        if is_in_check(current_position) != "Neither":
+            pygame.mixer.Sound.play(checkSound)
+        else:
+            pygame.mixer.Sound.play(moveSound)
 
         if colorTurn == "w":
             colorTurn = "b"
@@ -159,9 +166,44 @@ def MOVE_PIECES(mousePos):
 
 
 def DISPLAY_EFFECTS():
-    if len(selectedPiece) == 1: # one piece is selected, not yet moved
+    # blue highlight selection when a piece is selected
+    if len(selectedPiece) == 1:
+        # don't display effects if not the proper color turn
+        if colorTurn == "w" and current_position[selectedPiece[0][0]][selectedPiece[0][1]].islower():
+            selectedPiece.clear()
+            return
+        elif colorTurn == "b" and current_position[selectedPiece[0][0]][selectedPiece[0][1]].isupper():
+            selectedPiece.clear()
+            return
+
+        # blue square around selected piece
         pygame.draw.rect(WINDOW, selectedBlue, pygame.Rect(selectedPiece[0][1] * WIDTH // 8, selectedPiece[0][0] * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
 
+        for square in find_valid_moves(current_position, selectedPiece[0]):
+            # print(find_valid_moves(current_position, selectedPiece[0]))
+            # if the piece can be captured, draw a red frame around it
+            if is_opposite_color(current_position[selectedPiece[0][0]][selectedPiece[0][1]], current_position[square[0]][square[1]]):
+                pygame.draw.rect(WINDOW, captureRed, pygame.Rect(square[1] * WIDTH // 8, square[0] * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
+            # otherwise, draw circles to empty squares the piece can move to
+            else:
+                pygame.draw.circle(WINDOW, black, (square[1] * WIDTH // 8 + (WIDTH // 16), square[0] * HEIGHT // 8 + (HEIGHT // 16)), WIDTH // 48)
+
+    # a king is in check
+    isCheck = is_in_check(current_position)
+    if isCheck != "Neither":
+        if isCheck == "White":
+            for i, pieces in enumerate(current_position):
+                for j, piece in enumerate(pieces):
+                    if piece == "K":
+                        pygame.draw.rect(WINDOW, inCheckRed, pygame.Rect(j * WIDTH // 8, i * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
+        elif isCheck == "Black":
+            for i, pieces in enumerate(current_position):
+                for j, piece in enumerate(pieces):
+                    if piece == "k":
+                        pygame.draw.rect(WINDOW, inCheckRed, pygame.Rect(j * WIDTH // 8, i * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
+
+
+# displays pieces based on current board position
 def DISPLAY_PIECES():
     # display all the piece icons
     for i in range(8):
@@ -195,8 +237,10 @@ def DISPLAY_PIECES():
 
 # reset board to starting position
 def RESET_PIECES():
-    global current_position
+    global current_position, colorTurn
     current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    selectedPiece.clear()
+    colorTurn = "w"
 
     pygame.mixer.Sound.play(gameStartSound)
 
