@@ -1,9 +1,12 @@
 import pygame
 import math
 import copy
+import time
 
 from Logic import *
 from piece_movement import promote
+
+colorTurn = 'w'
 
 # window / pygame variables
 WIDTH = HEIGHT = 800
@@ -146,7 +149,7 @@ def COLOR_SQUARE(rank, file):
 def PLAY_MOVE_SOUND(new_current_position):
     # check for captures
     # TODO: Make this into hasCaptured function
-
+    global colorTurn
     captured = False
     for i in range(8):
         for j in range(8):
@@ -154,7 +157,7 @@ def PLAY_MOVE_SOUND(new_current_position):
                 # capture has occurred
                 captured = True
 
-    if is_in_check(current_position) != "Neither":
+    if is_in_check(current_position, colorTurn) != "Neither":
         pygame.mixer.Sound.play(checkSound)
     elif captured:
         pygame.mixer.Sound.play(captureSound)
@@ -198,8 +201,11 @@ def MOVE_PIECES(mousePos):
         if promote_coord[0] == 0:
             new_current_position[promote_coord[0]][promote_coord[1]] = 'Q'
 
-    if is_valid_move(current_position, new_current_position, colorTurn):
-        # play correct move sound
+    # print(current_position, new_pos_array)
+
+    valid_move = is_valid_move(current_position, new_current_position, colorTurn)
+
+    if valid_move:
         PLAY_MOVE_SOUND(new_current_position)
 
         previous_position.append(copy.deepcopy(current_position))
@@ -209,10 +215,16 @@ def MOVE_PIECES(mousePos):
             colorTurn = "b"
         else:
             colorTurn = "w"
+    elif valid_move == "White Checkmated":
+        print("White Checkmated")
+    elif valid_move == "Black Checkmated":
+        print("Black Checkmated")
+
 
 
 def DISPLAY_EFFECTS():
     # blue highlight selection when a piece is selected
+    global colorTurn
     if len(selectedPiece) == 1:
         # don't display effects if not the proper color turn
         if colorTurn == "w" and current_position[selectedPiece[0][0]][selectedPiece[0][1]].islower():
@@ -237,7 +249,7 @@ def DISPLAY_EFFECTS():
                 pygame.draw.circle(WINDOW, black, (square[1] * WIDTH // 8 + (WIDTH // 16), square[0] * HEIGHT // 8 + (HEIGHT // 16)), WIDTH // 48)
 
     # a king is in check
-    isCheck = is_in_check(current_position)
+    isCheck = is_in_check(current_position, colorTurn)
     if isCheck != "Neither":
         if isCheck == "White":
             for i, pieces in enumerate(current_position):
@@ -310,6 +322,14 @@ def RESET_PIECES():
 
     pygame.mixer.Sound.play(gameStartSound)
 
+
 # helper function
 def DISPLAY_PIECE_MOVEMENT(rank, file):
     print(current_position[rank][file])
+
+
+def print_boards(boards, delay):
+    global current_position
+    for board in boards:
+        current_position = board
+        time.sleep(delay)

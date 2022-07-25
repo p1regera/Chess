@@ -22,7 +22,7 @@ def rook_moves(board_array, piece_pos):
                     target_x = x + i
                     target_y = y
                 elif direction == "left":
-                    current_piece = board_array[x][y - 1]
+                    current_piece = board_array[x][y - i]
                     target_x = x
                     target_y = y - i
                     if target_y < 0:
@@ -138,21 +138,21 @@ def pawn_moves(board_array, piece_pos):
                 valid_moves.append([x + 1, y])
             if x == 1 and board_array[x + 2][y] == '0':
                 valid_moves.append([x + 2, y])
+            if is_opposite_color(piece, board_array[x + 1][y - 1]) and (y - 1) >= 0:
+                valid_moves.append([x + 1, y - 1])
             if is_opposite_color(piece, board_array[x + 1][y + 1]):
                 valid_moves.append([x + 1, y + 1])
-            if is_opposite_color(piece, board_array[x + 1][y - 1]):
-                valid_moves.append([x + 1, y - 1])
         elif piece == 'P':
             if board_array[x - 1][y] == '0':
                 valid_moves.append([x - 1, y])
             if x == 6 and board_array[x - 2][y] == '0':
                 valid_moves.append([x - 2, y])
+            if is_opposite_color(piece, board_array[x - 1][y - 1]) and (y - 1) >= 0:
+                valid_moves.append([x - 1, y - 1])
             if is_opposite_color(piece, board_array[x - 1][y + 1]):
                 valid_moves.append([x - 1, y + 1])
-            if is_opposite_color(piece, board_array[x - 1][y - 1]):
-                valid_moves.append([x - 1, y - 1])
     except IndexError:
-        return valid_moves
+        print("Index error")
 
     return valid_moves
 
@@ -175,15 +175,11 @@ def king_moves(board_array, piece_pos):
     y = piece_pos[1]
 
     # First take all the spaces a queen can move to
-    valid_moves = queen_moves(board_array, piece_pos)
-    for coord in valid_moves:
-        if coord[0] > x + 1 or coord[0] < x - 1:
-            valid_moves.remove(coord)
-        elif coord[1] > y + 1 or coord[1] < y - 1:
-            valid_moves.remove(coord)
+    queen_squares = queen_moves(board_array, piece_pos)
+    for coord in queen_squares:
+        if abs(coord[0] - x) <= 1 and abs(coord[1] - y) <= 1:
+            valid_moves.append(coord)
 
     return valid_moves
-
-
 
 
