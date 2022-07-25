@@ -152,7 +152,7 @@ def pawn_moves(board_array, piece_pos):
             if is_opposite_color(piece, board_array[x - 1][y + 1]):
                 valid_moves.append([x - 1, y + 1])
     except IndexError:
-        print("Index error")
+        pass
 
     return valid_moves
 

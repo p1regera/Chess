@@ -209,14 +209,11 @@ def is_castling(board_array, piece, cur_pos):
     global black_q_castle
     global black_k_castle
 
-    print(piece, cur_pos)
-
     if piece == 'K':
         if cur_pos == [7, 0] and white_q_castle:
             if board_array[7][1] == '0' and board_array[7][2] == '0' and board_array[7][3] == '0':
                 return "WQ"
         elif cur_pos == [7, 7] and white_k_castle:
-            print("JAFKJHDKJFJKHSJK")
             if board_array[7][5] == '0' and board_array[7][6] == '0':
                 return "WK"
     elif piece == 'k':
