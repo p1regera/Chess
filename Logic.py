@@ -247,10 +247,21 @@ def castle_update(piece, prev_pos):
     elif piece == 'r' and prev_pos == [0, 0]:
         black_q_castle = False
 
-    print(white_q_castle)
-    print(white_k_castle)
-    print(black_q_castle)
-    print(black_k_castle)
+    #print(white_q_castle)
+    #print(white_k_castle)
+    #print(black_q_castle)
+    #print(black_k_castle)
+
+
+def has_captured(previous_position, current_position):
+    if len(previous_position) == 0:
+        return False
+
+    for i in range(8):
+        for j in range(8):
+            if current_position[i][j] != previous_position[-1][i][j] and current_position[i][j] != '0' and previous_position[-1][i][j] != '0':
+                return True
+    return False
 
 
 def main():
@@ -268,7 +279,7 @@ def main():
     end = time.time()
     # print(end - start)
 
-    print(is_in_check(fen_to_array(sec_pos), 'w'))
+    # print(is_in_check(fen_to_array(sec_pos), 'w'))
 
 
 if __name__ == '__main__':

@@ -147,22 +147,13 @@ def COLOR_SQUARE(rank, file):
 
 
 def PLAY_MOVE_SOUND():
-    global previous_position
-    global colorTurn
+    global current_position, previous_position, colorTurn
 
-    # check for captures
-    # TODO: Make this into hasCaptured function
-    captured = False
-    for i in range(8):
-        for j in range(8):
-            if current_position[i][j] != previous_position[-1][i][j] and current_position[i][j] != '0' and previous_position[-1][i][j] != '0':
-                # capture has occurred
-                captured = True
+    if has_captured(previous_position, current_position):
+        pygame.mixer.Sound.play(captureSound)
 
     if is_in_check(current_position, colorTurn) != "Neither":
         pygame.mixer.Sound.play(checkSound)
-    elif captured:
-        pygame.mixer.Sound.play(captureSound)
     # elif hasCastled():
         # pygame.mixer.Sound.play(castleSound)
     else:
@@ -203,8 +194,6 @@ def MOVE_PIECES(mousePos):
         if promote_coord[0] == 0:
             new_current_position[promote_coord[0]][promote_coord[1]] = 'Q'
 
-    # print(current_position, new_pos_array)
-
     valid_move = is_valid_move(current_position, new_current_position, colorTurn)
 
     if valid_move:
@@ -218,13 +207,10 @@ def MOVE_PIECES(mousePos):
             colorTurn = "b"
         else:
             colorTurn = "w"
-    elif valid_move == "White Checkmated":
+    if valid_move == "White Checkmated":
         print("White Checkmated")
-    elif valid_move == "Black Checkmated":
+    if valid_move == "Black Checkmated":
         print("Black Checkmated")
-
-
-
 
 
 def DISPLAY_EFFECTS():
@@ -316,7 +302,7 @@ def MAKE_PREVIOUS_TURN():
     else:
         colorTurn = "w"
 
-    PLAY_MOVE_SOUND(current_position)
+    PLAY_MOVE_SOUND()
 
 # reset board to starting position
 def RESET_PIECES():
