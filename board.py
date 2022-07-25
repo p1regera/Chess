@@ -143,14 +143,15 @@ def COLOR_SQUARE(rank, file):
             return "White"
 
 
-def PLAY_MOVE_SOUND(new_current_position):
+def PLAY_MOVE_SOUND():
+    global previous_position
+
     # check for captures
     # TODO: Make this into hasCaptured function
-
     captured = False
     for i in range(8):
         for j in range(8):
-            if current_position[i][j] != new_current_position[i][j] and current_position[i][j] != '0' and new_current_position[i][j] != '0':
+            if current_position[i][j] != previous_position[-1][i][j] and current_position[i][j] != '0' and previous_position[-1][i][j] != '0':
                 # capture has occurred
                 captured = True
 
@@ -199,11 +200,11 @@ def MOVE_PIECES(mousePos):
             new_current_position[promote_coord[0]][promote_coord[1]] = 'Q'
 
     if is_valid_move(current_position, new_current_position, colorTurn):
-        # play correct move sound
-        PLAY_MOVE_SOUND(new_current_position)
-
         previous_position.append(copy.deepcopy(current_position))
         current_position = new_current_position
+
+        # play correct move sound
+        PLAY_MOVE_SOUND()
 
         if colorTurn == "w":
             colorTurn = "b"
@@ -283,7 +284,7 @@ def DISPLAY_PIECES():
             if current_position[i][j] == "P":
                 WINDOW.blit(whitePawn, (j * WIDTH / 8, i * HEIGHT / 8))
 
-# make previous turn
+# change board position to the last saved board position
 def MAKE_PREVIOUS_TURN():
     global previous_position, current_position, colorTurn
 
