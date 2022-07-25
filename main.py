@@ -9,6 +9,9 @@ pygame.init()
 pygame.display.set_caption("Chess")
 pygame.display.set_icon(board.blackPawn)
 
+FPS = 60
+fpsClock = pygame.time.Clock()
+
 def main():
     while True:
         board.CREATE_CHESSBOARD()
@@ -24,11 +27,14 @@ def main():
                 # press R to reset board to starting position
                 if event.key == pygame.K_r:
                     board.RESET_PIECES()
+                if event.key == pygame.K_LEFT:
+                    board.MAKE_PREVIOUS_TURN()
 
         board.DISPLAY_EFFECTS()
         board.DISPLAY_PIECES()
 
         pygame.display.update()
+        fpsClock.tick(FPS)
 
 if __name__ == '__main__':
     main()

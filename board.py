@@ -20,12 +20,14 @@ black = (0, 0, 0)
 blue = (75, 115, 153)
 
 # effect colors
-selectedBlue = (117, 199, 232)
+selectedBlueOnWhite = (117, 199, 232)
+selectedBlueOnBlack = (38, 140, 204)
 inCheckRed = (237, 62, 54)
 captureRed = (247, 100, 99)
 
 # board variables
 current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
 canWLongCastle = canWShortCastle = True
@@ -127,9 +129,53 @@ def CREATE_CHESSBOARD():
             create_horizontal_rects(x, y, blue, white)
             y += RECT_WIDTH
 
+# TODO: Move this function into Logic file
+def COLOR_SQUARE(rank, file):
+    if rank % 2 == 0:
+        if file % 2 == 0:
+            return "White"
+        else:
+            return "Black"
+    else:
+        if file % 2 == 0:
+            return "Black"
+        else:
+            return "White"
+
+
+def PLAY_MOVE_SOUND(new_current_position):
+    # check for captures
+    # TODO: Make this into hasCaptured function
+
+    captured = False
+    for i in range(8):
+        for j in range(8):
+            if current_position[i][j] != new_current_position[i][j] and current_position[i][j] != '0' and new_current_position[i][j] != '0':
+                # capture has occurred
+                captured = True
+
+    if is_in_check(current_position) != "Neither":
+        pygame.mixer.Sound.play(checkSound)
+    elif captured:
+        pygame.mixer.Sound.play(captureSound)
+    # elif hasCastled():
+        # pygame.mixer.Sound.play(castleSound)
+    else:
+        pygame.mixer.Sound.play(moveSound)
+
+def CALCULATE_PIECE_SLOPE(y1, x1, y2, x2):
+    y1 = -y1
+    y2 = -y2
+
+    if x2 - x1 == 0:
+        return 0
+
+    return (y1 - y2) / (x1 - x2)
+
+
 def MOVE_PIECES(mousePos):
     # return the modified array after an attempted move
-    global current_position, colorTurn
+    global previous_position, current_position, colorTurn
 
     # modified array after move
     new_current_position = copy.deepcopy(current_position)
@@ -153,11 +199,11 @@ def MOVE_PIECES(mousePos):
             new_current_position[promote_coord[0]][promote_coord[1]] = 'Q'
 
     if is_valid_move(current_position, new_current_position, colorTurn):
+        # play correct move sound
+        PLAY_MOVE_SOUND(new_current_position)
+
+        previous_position.append(copy.deepcopy(current_position))
         current_position = new_current_position
-        if is_in_check(current_position) != "Neither":
-            pygame.mixer.Sound.play(checkSound)
-        else:
-            pygame.mixer.Sound.play(moveSound)
 
         if colorTurn == "w":
             colorTurn = "b"
@@ -176,11 +222,13 @@ def DISPLAY_EFFECTS():
             selectedPiece.clear()
             return
 
-        # blue square around selected piece
-        pygame.draw.rect(WINDOW, selectedBlue, pygame.Rect(selectedPiece[0][1] * WIDTH // 8, selectedPiece[0][0] * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
+        # blue square around selected piece, changes shade based on color square
+        if COLOR_SQUARE(selectedPiece[0][1], selectedPiece[0][0]) == "White":
+            pygame.draw.rect(WINDOW, selectedBlueOnWhite, pygame.Rect(selectedPiece[0][1] * WIDTH // 8, selectedPiece[0][0] * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
+        else:
+            pygame.draw.rect(WINDOW, selectedBlueOnBlack, pygame.Rect(selectedPiece[0][1] * WIDTH // 8, selectedPiece[0][0] * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
 
         for square in find_valid_moves(current_position, selectedPiece[0]):
-            # print(find_valid_moves(current_position, selectedPiece[0]))
             # if the piece can be captured, draw a red frame around it
             if is_opposite_color(current_position[selectedPiece[0][0]][selectedPiece[0][1]], current_position[square[0]][square[1]]):
                 pygame.draw.rect(WINDOW, captureRed, pygame.Rect(square[1] * WIDTH // 8, square[0] * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
@@ -234,6 +282,24 @@ def DISPLAY_PIECES():
                 WINDOW.blit(whiteKnight, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "P":
                 WINDOW.blit(whitePawn, (j * WIDTH / 8, i * HEIGHT / 8))
+
+# make previous turn
+def MAKE_PREVIOUS_TURN():
+    global previous_position, current_position, colorTurn
+
+    if len(previous_position) == 0:
+        return
+
+    current_position = previous_position[-1]
+    previous_position.remove(current_position)
+    selectedPiece.clear()
+
+    if colorTurn == "w":
+        colorTurn = "b"
+    else:
+        colorTurn = "w"
+
+    PLAY_MOVE_SOUND(current_position)
 
 # reset board to starting position
 def RESET_PIECES():
