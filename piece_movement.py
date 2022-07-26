@@ -36,7 +36,7 @@ def rook_moves(board_array, piece_pos):
 
                 if current_piece == '0':
                     valid_moves.append([target_x, target_y])
-                elif is_opposite_color(piece, current_piece):
+                elif is_opposite_color(piece, current_piece) and (piece not in ['K', 'k'] or piece in ['K', 'k']):
                     valid_moves.append([target_x, target_y])
                     break
                 else:
@@ -80,7 +80,7 @@ def bishop_moves(board_array, piece_pos):
 
                 if current_piece == '0':
                     valid_moves.append([target_x, target_y])
-                elif is_opposite_color(piece, current_piece):
+                elif is_opposite_color(piece, current_piece) and (piece not in ['K', 'k'] or piece in ['K', 'k']):
                     valid_moves.append([target_x, target_y])
                     break
                 else:

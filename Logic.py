@@ -8,6 +8,7 @@ white_k_castle = True
 black_q_castle = True
 black_k_castle = True
 
+
 def fen_to_array(fen):
     # Helper function, turns 'test' into ['t', 'e', 's', 't']
     def split(word):
@@ -78,7 +79,7 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor):
     # If the player moving the piece is in check after the move, the move is invalid
     check = is_in_check(cur_board_array, turnColor)
 
-    if check == "Both" and turnColor == 'b':
+    if check == "Both":
         return False
     if check == "White" and turnColor == 'w':
         return False
@@ -126,12 +127,18 @@ def is_in_check(board_array, turnColor):
                 white_king_pos = [i, j]
             elif cur_piece == 'k':
                 black_king_pos = [i, j]
-            elif cur_piece.isupper():
+            if cur_piece.isupper():
                 for coord in find_valid_moves(board_array, [i, j]):
                     white_valid_moves.append(coord)
-            else:
+            elif cur_piece.islower():
                 for coord in find_valid_moves(board_array, [i, j]):
                     black_valid_moves.append(coord)
+
+    # print("WM", white_valid_moves)
+    # print("BM", black_valid_moves)
+    # print("WK:", white_king_pos)
+    # print( "BK:", black_king_pos)
+    # print("====================")
 
     white_checked = False
     black_checked = False
@@ -266,8 +273,8 @@ def has_captured(previous_position, current_position):
 
 def main():
     default = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    starting_pos = "rnbqkbnr/ppppp1pp/5p2/Q7/8/8/PPPPPPPP/RNB1KBNR w KQkq - 0 1"
-    sec_pos = "rnb1k2r/ppppQppp/8/8/1B2P3/P2P2q1/P1P2PPP/RNB1KBNR w KQkq - 0 1"
+    starting_pos = "rnbq1bnr/pppppppp/8/4k3/4K3/8/PPPPPPPP/RNBQ1BNR w KQkq - 0 1"
+    sec_pos = "rnbq1bnr/pppppppp/8/4K3/8/8/PPPPPPPP/RNBQ1BNR w KQkq - 0 1"
 
     start = time.time()
     # print('\n'.join(' '.join(str(x) for x in row) for row in fen_to_array(starting_pos)))
@@ -280,6 +287,8 @@ def main():
     # print(end - start)
 
     # print(is_in_check(fen_to_array(sec_pos), 'w'))
+
+    print(is_valid_move(fen_to_array(starting_pos), fen_to_array(sec_pos), 'w'))
 
 
 if __name__ == '__main__':
