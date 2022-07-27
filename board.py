@@ -4,7 +4,7 @@ import copy
 import time
 
 from Logic import *
-from piece_movement import promote
+from piece_movement import promote, en_passant
 
 colorTurn = 'w'
 
@@ -173,6 +173,7 @@ def MOVE_PIECES(mousePos):
     # return the modified array after an attempted move
     global previous_position, current_position, colorTurn
     castling = False
+    sp_copy = []
 
     # modified array after move
     new_current_position = copy.deepcopy(current_position)
@@ -183,11 +184,13 @@ def MOVE_PIECES(mousePos):
     selectedPiece.append([rank, file])
 
     if len(selectedPiece) == 2: # two squares have been selected
+        sp_copy = copy.deepcopy(selectedPiece)
         castling = is_castling(new_current_position, new_current_position[selectedPiece[0][0]][selectedPiece[0][1]],
                                [selectedPiece[1][0], selectedPiece[1][1]])
         new_current_position[selectedPiece[1][0]][selectedPiece[1][1]] = new_current_position[selectedPiece[0][0]][selectedPiece[0][1]]
         new_current_position[selectedPiece[0][0]][selectedPiece[0][1]] = '0'
         selectedPiece.clear()
+
     # Update a pawn to queen if on the last rank
     promote_coord = promote(new_current_position)
     if promote_coord != []:
@@ -198,9 +201,13 @@ def MOVE_PIECES(mousePos):
 
     valid_move = is_valid_move(current_position, new_current_position, colorTurn)
 
+    # print(en_passant_capture)
+
     if valid_move or castling:
         previous_position.append(copy.deepcopy(current_position))
         current_position = new_current_position
+
+        en_passant(previous_position[-1], sp_copy[0], sp_copy[1])
 
         if castling:
             current_position = castling

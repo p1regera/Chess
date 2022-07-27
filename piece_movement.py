@@ -1,3 +1,7 @@
+import board
+import copy
+
+
 def is_opposite_color(piece, target_piece):
     if piece == '0' or target_piece == '0':
         return False
@@ -126,11 +130,15 @@ def knight_moves(board_array, piece_pos):
     return valid_moves
 
 
-def pawn_moves(board_array, piece_pos):
+def pawn_moves(board_array, piece_pos, en_passant):
+    board_copy = board_array
     piece = board_array[piece_pos[0]][piece_pos[1]]
     valid_moves = []
     x = piece_pos[0]
     y = piece_pos[1]
+    can_en_passant = [10, 10, 10, 10]
+    if piece_pos in en_passant and is_opposite_color(piece, en_passant[0]):
+        can_en_passant = [piece, en_passant[3]]
 
     try:
         if piece == 'p':
@@ -138,18 +146,18 @@ def pawn_moves(board_array, piece_pos):
                 valid_moves.append([x + 1, y])
             if x == 1 and board_array[x + 2][y] == '0':
                 valid_moves.append([x + 2, y])
-            if is_opposite_color(piece, board_array[x + 1][y - 1]) and (y - 1) >= 0:
+            if (is_opposite_color(piece, board_array[x + 1][y - 1]) or can_en_passant[1] == y - 1) and (y - 1) >= 0:
                 valid_moves.append([x + 1, y - 1])
-            if is_opposite_color(piece, board_array[x + 1][y + 1]):
+            if is_opposite_color(piece, board_array[x + 1][y + 1]) or can_en_passant[1] == y + 1:
                 valid_moves.append([x + 1, y + 1])
         elif piece == 'P':
             if board_array[x - 1][y] == '0':
                 valid_moves.append([x - 1, y])
             if x == 6 and board_array[x - 2][y] == '0':
                 valid_moves.append([x - 2, y])
-            if is_opposite_color(piece, board_array[x - 1][y - 1]) and (y - 1) >= 0:
+            if (is_opposite_color(piece, board_array[x - 1][y - 1]) or can_en_passant[1] == y - 1) and (y - 1) >= 0:
                 valid_moves.append([x - 1, y - 1])
-            if is_opposite_color(piece, board_array[x - 1][y + 1]):
+            if is_opposite_color(piece, board_array[x - 1][y + 1]) or can_en_passant[1] == y + 1:
                 valid_moves.append([x - 1, y + 1])
     except IndexError:
         pass
@@ -158,6 +166,7 @@ def pawn_moves(board_array, piece_pos):
 
 
 def promote(board_array):
+    global en_passant_available
     # Returns the location of the pawn to promote
     for i in range(0, 8):
         if board_array[0][i] == "P":
@@ -183,3 +192,15 @@ def king_moves(board_array, piece_pos):
     return valid_moves
 
 
+def en_passant(prev_board, prev_piece_pos, cur_piece_pos):
+    piece = prev_board[prev_piece_pos[0]][prev_piece_pos[1]]
+    if piece.islower():
+        if cur_piece_pos == [prev_piece_pos[0] + 1, prev_piece_pos[1] + 1] and prev_board[cur_piece_pos[0]][cur_piece_pos[1]] == '0':
+            board.current_position[cur_piece_pos[0] - 1][cur_piece_pos[1]] = '0'
+        elif cur_piece_pos == [prev_piece_pos[0] + 1, prev_piece_pos[1] - 1] and prev_board[cur_piece_pos[0]][cur_piece_pos[1]] == '0':
+            board.current_position[cur_piece_pos[0] - 1][cur_piece_pos[1]] = '0'
+    elif piece.isupper():
+        if cur_piece_pos == [prev_piece_pos[0] - 1, prev_piece_pos[1] + 1] and prev_board[cur_piece_pos[0]][cur_piece_pos[1]] == '0':
+            board.current_position[cur_piece_pos[0] + 1][cur_piece_pos[1]] = '0'
+        elif cur_piece_pos == [prev_piece_pos[0] - 1, prev_piece_pos[1] - 1] and prev_board[cur_piece_pos[0]][cur_piece_pos[1]] == '0':
+            board.current_position[cur_piece_pos[0] + 1][cur_piece_pos[1]] = '0'

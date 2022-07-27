@@ -8,6 +8,8 @@ white_k_castle = True
 black_q_castle = True
 black_k_castle = True
 
+en_passant_available = [0, 0, 0, 0]
+
 
 def fen_to_array(fen):
     # Helper function, turns 'test' into ['t', 'e', 's', 't']
@@ -40,6 +42,7 @@ def fen_to_array(fen):
 
 
 def is_valid_move(prev_board_array, cur_board_array, turnColor):
+    global en_passant_available
     if prev_board_array == cur_board_array:
         return False
     # Find which piece moves, and the starting and end position
@@ -76,6 +79,12 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor):
     # Update castling parameters
     castle_update(piece, prev_pos)
 
+    # En-passant logic
+    if piece in ['P', 'p'] and abs(prev_pos[0] - cur_pos[0]) == 2:
+        en_passant_available = [piece, [cur_pos[0], cur_pos[1] - 1], [cur_pos[0], cur_pos[1] + 1], cur_pos[1]]
+    else:
+        en_passant_available = []
+
     # If the player moving the piece is in check after the move, the move is invalid
     check = is_in_check(cur_board_array, turnColor)
 
@@ -98,7 +107,7 @@ def find_valid_moves(board_array, piece_pos):
     piece = board_array[piece_pos[0]][piece_pos[1]]
 
     if piece in ['P', 'p']:
-        return pawn_moves(board_array, piece_pos)
+        return pawn_moves(board_array, piece_pos, en_passant_available)
     elif piece in ['R', 'r']:
         return rook_moves(board_array, piece_pos)
     elif piece in ['N', 'n']:
@@ -220,7 +229,7 @@ def is_castling(board_array, piece, cur_pos):
         if cur_pos == [7, 0] and white_q_castle:
             if board_array[7][1] == '0' and board_array[7][2] == '0' and board_array[7][3] == '0':
                 for board in valid_boards(board_array, 'b'):
-                    if board[7][1] != '0' or board[7][2] != '0' or board[7][3] != '0':
+                    if board[7][1] != '0' or board[7][2] != '0' or board[7][3] != '0' or is_in_check(board_array, 'b') in ['White', 'White Checkmated']:
                         return False
                 board_array[7][0] = '0'
                 board_array[7][1] = 'K'
@@ -231,7 +240,7 @@ def is_castling(board_array, piece, cur_pos):
         elif cur_pos == [7, 7] and white_k_castle:
             if board_array[7][5] == '0' and board_array[7][6] == '0':
                 for board in valid_boards(board_array, 'b'):
-                    if board[7][5] != '0' or board[7][6] != '0':
+                    if board[7][5] != '0' or board[7][6] != '0' or is_in_check(board_array, 'b') in ['White', 'White Checkmated']:
                         return False
                 board_array[7][4] = '0'
                 board_array[7][5] = 'R'
@@ -243,7 +252,7 @@ def is_castling(board_array, piece, cur_pos):
         if cur_pos == [0, 0] and black_q_castle:
             if board_array[0][1] == '0' and board_array[0][2] == '0' and board_array[0][3] == '0':
                 for board in valid_boards(board_array, 'w'):
-                    if board[0][1] != '0' or board[0][2] != '0' or board[0][3] != '0':
+                    if board[0][1] != '0' or board[0][2] != '0' or board[0][3] != '0' or is_in_check(board_array, 'w') in ['Black', 'Black Checkmated']:
                         return False
                 board_array[0][0] = '0'
                 board_array[0][1] = 'k'
@@ -254,7 +263,7 @@ def is_castling(board_array, piece, cur_pos):
         elif cur_pos == [0, 7] and black_k_castle:
             if board_array[0][5] == '0' and board_array[0][6] == '0':
                 for board in valid_boards(board_array, 'w'):
-                    if board[0][5] != '0' or board[0][6] != '0':
+                    if board[0][5] != '0' or board[0][6] != '0' or is_in_check(board_array, 'w') in ['Black', 'Black Checkmated']:
                         return False
                 board_array[0][4] = '0'
                 board_array[0][5] = 'k'
@@ -285,11 +294,6 @@ def castle_update(piece, prev_pos):
         black_k_castle = False
     elif piece == 'r' and prev_pos == [0, 0]:
         black_q_castle = False
-
-    #print(white_q_castle)
-    #print(white_k_castle)
-    #print(black_q_castle)
-    #print(black_k_castle)
 
 
 def has_captured(previous_position, current_position):
