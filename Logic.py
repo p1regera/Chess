@@ -219,17 +219,49 @@ def is_castling(board_array, piece, cur_pos):
     if piece == 'K':
         if cur_pos == [7, 0] and white_q_castle:
             if board_array[7][1] == '0' and board_array[7][2] == '0' and board_array[7][3] == '0':
-                return "WQ"
+                for board in valid_boards(board_array, 'b'):
+                    if board[7][1] != '0' or board[7][2] != '0' or board[7][3] != '0':
+                        return False
+                board_array[7][0] = '0'
+                board_array[7][1] = 'K'
+                board_array[7][2] = 'R'
+                board_array[7][4] = '0'
+                white_q_castle = False
+                return board_array
         elif cur_pos == [7, 7] and white_k_castle:
             if board_array[7][5] == '0' and board_array[7][6] == '0':
-                return "WK"
+                for board in valid_boards(board_array, 'b'):
+                    if board[7][5] != '0' or board[7][6] != '0':
+                        return False
+                board_array[7][4] = '0'
+                board_array[7][5] = 'R'
+                board_array[7][6] = 'K'
+                board_array[7][7] = '0'
+                white_k_castle = False
+                return board_array
     elif piece == 'k':
-        if cur_pos == [0, 0] and white_q_castle:
+        if cur_pos == [0, 0] and black_q_castle:
             if board_array[0][1] == '0' and board_array[0][2] == '0' and board_array[0][3] == '0':
-                return "BQ"
-        elif cur_pos == [0, 7] and white_k_castle:
+                for board in valid_boards(board_array, 'w'):
+                    if board[0][1] != '0' or board[0][2] != '0' or board[0][3] != '0':
+                        return False
+                board_array[0][0] = '0'
+                board_array[0][1] = 'k'
+                board_array[0][2] = 'r'
+                board_array[0][4] = '0'
+                black_q_castle = False
+                return board_array
+        elif cur_pos == [0, 7] and black_k_castle:
             if board_array[0][5] == '0' and board_array[0][6] == '0':
-                return "BK"
+                for board in valid_boards(board_array, 'w'):
+                    if board[0][5] != '0' or board[0][6] != '0':
+                        return False
+                board_array[0][4] = '0'
+                board_array[0][5] = 'k'
+                board_array[0][6] = 'r'
+                board_array[0][7] = '0'
+                black_k_castle = False
+                return board_array
 
     return False
 
