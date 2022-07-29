@@ -33,8 +33,6 @@ current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w K
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
-canWLongCastle = canWShortCastle = True
-canBLongCastle = canBShortCastle = True
 
 pygame.mixer.init()
 
