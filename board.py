@@ -222,6 +222,8 @@ def MOVE_PIECES(mousePos):
         print("White Checkmated")
     if valid_move == "Black Checkmated":
         print("Black Checkmated")
+    if valid_move == "Stalemate":
+        print("Stalemate")
 
 
 def DISPLAY_EFFECTS():

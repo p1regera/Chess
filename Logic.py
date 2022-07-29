@@ -98,6 +98,8 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor):
         return "White Checkmated"
     if check == "Black Checkmated":
         return "Black Checkmated"
+    if check == "Stalemate":
+        return "Stalemate"
 
     return True
 
@@ -165,9 +167,10 @@ def is_in_check(board_array, turnColor):
             checkmate = True
             for board in valid_boards(board_array, 'w'):
                 if is_in_check(board, 'w') in ["Black", "Neither"]:
-                    print('\n'.join(' '.join(str(x) for x in row) for row in board))
-                    print(is_in_check(board, 'w'))
-                    print("=================")
+                    # Debugging purposes
+                    # print('\n'.join(' '.join(str(x) for x in row) for row in board))
+                    # print(is_in_check(board, 'w'))
+                    # print("=================")
                     checkmate = False
                     break
             if checkmate:
@@ -181,9 +184,9 @@ def is_in_check(board_array, turnColor):
                 for board in valid_boards(board_array, 'b'):
                     if is_in_check(board, 'b') in ["White", "Neither"]:
                         # Debugging purposes
-                        print('\n'.join(' '.join(str(x) for x in row) for row in board))
-                        print(is_in_check(board, 'b'))
-                        print("=================")
+                        # print('\n'.join(' '.join(str(x) for x in row) for row in board))
+                        # print(is_in_check(board, 'b'))
+                        # print("=================")
                         checkmate = False
                         break
                 if checkmate:

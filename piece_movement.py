@@ -194,12 +194,12 @@ def king_moves(board_array, piece_pos):
 
 def en_passant(prev_board, prev_piece_pos, cur_piece_pos):
     piece = prev_board[prev_piece_pos[0]][prev_piece_pos[1]]
-    if piece.islower():
+    if piece.islower() and piece == 'p':
         if cur_piece_pos == [prev_piece_pos[0] + 1, prev_piece_pos[1] + 1] and prev_board[cur_piece_pos[0]][cur_piece_pos[1]] == '0':
             board.current_position[cur_piece_pos[0] - 1][cur_piece_pos[1]] = '0'
         elif cur_piece_pos == [prev_piece_pos[0] + 1, prev_piece_pos[1] - 1] and prev_board[cur_piece_pos[0]][cur_piece_pos[1]] == '0':
             board.current_position[cur_piece_pos[0] - 1][cur_piece_pos[1]] = '0'
-    elif piece.isupper():
+    elif piece.isupper() and piece == 'P':
         if cur_piece_pos == [prev_piece_pos[0] - 1, prev_piece_pos[1] + 1] and prev_board[cur_piece_pos[0]][cur_piece_pos[1]] == '0':
             board.current_position[cur_piece_pos[0] + 1][cur_piece_pos[1]] = '0'
         elif cur_piece_pos == [prev_piece_pos[0] - 1, prev_piece_pos[1] - 1] and prev_board[cur_piece_pos[0]][cur_piece_pos[1]] == '0':
