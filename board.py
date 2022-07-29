@@ -33,6 +33,10 @@ current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w K
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
+<<<<<<< Updated upstream
+=======
+castling = False
+>>>>>>> Stashed changes
 
 pygame.mixer.init()
 
@@ -149,7 +153,8 @@ def PLAY_MOVE_SOUND():
 
     if has_captured(previous_position, current_position):
         pygame.mixer.Sound.play(captureSound)
-
+    if castling:
+        pygame.mixer.Sound.play(castlingSound)
     if is_in_check(current_position, colorTurn) != "Neither":
         pygame.mixer.Sound.play(checkSound)
     # elif hasCastled():
@@ -169,7 +174,12 @@ def CALCULATE_PIECE_SLOPE(y1, x1, y2, x2):
 
 def MOVE_PIECES(mousePos):
     # return the modified array after an attempted move
+<<<<<<< Updated upstream
     global previous_position, current_position, colorTurn
+=======
+    global previous_position, current_position, colorTurn, castling
+    sp_copy = []
+>>>>>>> Stashed changes
 
     # modified array after move
     new_current_position = copy.deepcopy(current_position)
@@ -194,7 +204,11 @@ def MOVE_PIECES(mousePos):
 
     valid_move = is_valid_move(current_position, new_current_position, colorTurn)
 
+<<<<<<< Updated upstream
     if valid_move:
+=======
+    if valid_move or castling:
+>>>>>>> Stashed changes
         previous_position.append(copy.deepcopy(current_position))
         current_position = new_current_position
 
