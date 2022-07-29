@@ -40,42 +40,42 @@ pygame.mixer.init()
 
 # load white/black pieces
 
-blackKing = pygame.image.load("./icons/blackking.png")
+blackKing = pygame.image.load("./icons/bk.png")
 blackKing = pygame.transform.scale(blackKing, (WIDTH / 8, HEIGHT / 8))
 
-blackQueen = pygame.image.load("./icons/blackqueen.png")
+blackQueen = pygame.image.load("./icons/bq.png")
 blackQueen = pygame.transform.scale(blackQueen, (WIDTH / 8, HEIGHT / 8))
 
-blackBishop = pygame.image.load("./icons/blackbishop.png")
+blackBishop = pygame.image.load("./icons/bb.png")
 blackBishop = pygame.transform.scale(blackBishop, (WIDTH / 8, HEIGHT / 8))
 
-blackKnight = pygame.image.load("./icons/blackknight.png")
+blackKnight = pygame.image.load("./icons/bn.png")
 blackKnight = pygame.transform.scale(blackKnight, (WIDTH / 8, HEIGHT / 8))
 
-blackRook = pygame.image.load("./icons/blackrook.png")
+blackRook = pygame.image.load("./icons/br.png")
 blackRook = pygame.transform.scale(blackRook, (WIDTH / 8, HEIGHT / 8))
 
-blackPawn = pygame.image.load("./icons/blackpawn.png")
+blackPawn = pygame.image.load("./icons/bp.png")
 blackPawn = pygame.transform.scale(blackPawn, (WIDTH / 8, HEIGHT / 8))
 
 ########################################################################################################################
 
-whiteKing = pygame.image.load("./icons/whiteking.png")
+whiteKing = pygame.image.load("./icons/wk.png")
 whiteKing = pygame.transform.scale(whiteKing, (WIDTH / 8, HEIGHT / 8))
 
-whiteQueen = pygame.image.load("./icons/whitequeen.png")
+whiteQueen = pygame.image.load("./icons/wq.png")
 whiteQueen = pygame.transform.scale(whiteQueen, (WIDTH / 8, HEIGHT / 8))
 
-whiteBishop = pygame.image.load("./icons/whitebishop.png")
+whiteBishop = pygame.image.load("./icons/wb.png")
 whiteBishop = pygame.transform.scale(whiteBishop, (WIDTH / 8, HEIGHT / 8))
 
-whiteKnight = pygame.image.load("./icons/whiteknight.png")
+whiteKnight = pygame.image.load("./icons/wn.png")
 whiteKnight = pygame.transform.scale(whiteKnight, (WIDTH / 8, HEIGHT / 8))
 
-whiteRook = pygame.image.load("./icons/whiterook.png")
+whiteRook = pygame.image.load("./icons/wr.png")
 whiteRook = pygame.transform.scale(whiteRook, (WIDTH / 8, HEIGHT / 8))
 
-whitePawn = pygame.image.load("./icons/whitepawn.png")
+whitePawn = pygame.image.load("./icons/wp.png")
 whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
 
 ############################################################################
