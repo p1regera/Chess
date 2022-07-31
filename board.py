@@ -32,7 +32,8 @@ inCheckRed = (237, 62, 54)
 captureRed = (247, 100, 99)
 
 # board variables
-current_position = fen_to_array("4k3/4p3/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to

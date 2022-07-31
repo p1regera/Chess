@@ -42,7 +42,7 @@ def fen_to_array(fen):
     return board_array
 
 
-def is_valid_move(prev_board_array, cur_board_array, turnColor):
+def is_valid_move(prev_board_array, cur_board_array, turnColor, update_flags=True):
     global en_passant_available
     if prev_board_array == cur_board_array:
         return False
@@ -78,13 +78,15 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor):
         return False
 
     # Update castling parameters
-    castle_update(piece, prev_pos)
+    if update_flags:
+        castle_update(piece, prev_pos)
 
     # En-passant logic
-    if piece in ['P', 'p'] and abs(prev_pos[0] - cur_pos[0]) == 2:
-        en_passant_available = [piece, [cur_pos[0], cur_pos[1] - 1], [cur_pos[0], cur_pos[1] + 1], cur_pos[1]]
-    else:
-        en_passant_available = []
+    if update_flags:
+        if piece in ['P', 'p'] and abs(prev_pos[0] - cur_pos[0]) == 2:
+            en_passant_available = [piece, [cur_pos[0], cur_pos[1] - 1], [cur_pos[0], cur_pos[1] + 1], cur_pos[1]]
+        else:
+            en_passant_available = []
 
     # If the player moving the piece is in check after the move, the move is invalid
     check = is_in_check(cur_board_array, turnColor)
@@ -204,11 +206,11 @@ def check_stalemate(colorTurn):
     stalemate_black = True
 
     for move in white_moves:
-        if is_valid_move(board.current_position, move, 'w'):
+        if is_valid_move(board.current_position, move, 'w', False):
             stalemate_white = False
 
     for move in black_moves:
-        if is_valid_move(board.current_position, move, 'b'):
+        if is_valid_move(board.current_position, move, 'b', False):
             stalemate_black = False
 
     if (stalemate_white and colorTurn == 'w') or (stalemate_black and colorTurn == 'b'):
@@ -231,8 +233,6 @@ def valid_boards(board_array, turnColor):
                     valid_board_list.append(board_copy)
             elif piece.islower() and turnColor == 'b':
                 valid_moves = find_valid_moves(board_array, [i, j])
-                if piece == 'r':
-                    print(valid_moves)
                 for move in valid_moves:
                     board_copy = copy.deepcopy(board_array)
                     board_copy[i][j] = '0'
