@@ -46,13 +46,15 @@ blueBoard = pygame.image.load("./themes/blueBoard.png")
 blueBoard = pygame.transform.scale(blueBoard, (WIDTH, HEIGHT))
 
 # default board
+newspaperBoard = pygame.image.load("./themes/newspaperBoard.png")
+newspaperBoard = pygame.transform.scale(newspaperBoard, (WIDTH, HEIGHT))
+preferredBoard = newspaperBoard
+
 tournamentBoard = pygame.image.load("./themes/tournamentBoard.png")
 tournamentBoard = pygame.transform.scale(tournamentBoard, (WIDTH, HEIGHT))
-preferredBoard = tournamentBoard
 
 
 # load white/black pieces
-
 blackKing = pygame.image.load("./icons/bk.png")
 blackKing = pygame.transform.scale(blackKing, (WIDTH / 8, HEIGHT / 8))
 
