@@ -32,7 +32,7 @@ inCheckRed = (237, 62, 54)
 captureRed = (247, 100, 99)
 
 # board variables
-current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+current_position = fen_to_array("4k3/4p3/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
@@ -48,10 +48,11 @@ blueBoard = pygame.transform.scale(blueBoard, (WIDTH, HEIGHT))
 # default board
 newspaperBoard = pygame.image.load("./themes/newspaperBoard.png")
 newspaperBoard = pygame.transform.scale(newspaperBoard, (WIDTH, HEIGHT))
-preferredBoard = newspaperBoard
 
 tournamentBoard = pygame.image.load("./themes/tournamentBoard.png")
 tournamentBoard = pygame.transform.scale(tournamentBoard, (WIDTH, HEIGHT))
+
+preferredBoard = blueBoard
 
 
 # load white/black pieces
@@ -240,7 +241,7 @@ def MOVE_PIECES(mousePos):
         print("White Checkmated")
     if valid_move == "Black Checkmated":
         print("Black Checkmated")
-    if valid_move == "Stalemate":
+    if check_stalemate(colorTurn) and valid_move not in ["White Checkmated", "Black Checkmated"]:
         print("Stalemate")
 
 

@@ -1,5 +1,6 @@
 import re
 import time
+import board
 import copy
 from piece_movement import *
 
@@ -194,6 +195,26 @@ def is_in_check(board_array, turnColor):
         return "Black"
     else:
         return "Neither"
+
+
+def check_stalemate(colorTurn):
+    white_moves = valid_boards(board.current_position, 'w')
+    black_moves = valid_boards(board.current_position, 'b')
+    stalemate_white = True
+    stalemate_black = True
+
+    for move in white_moves:
+        if is_valid_move(board.current_position, move, 'w'):
+            stalemate_white = False
+
+    for move in black_moves:
+        if is_valid_move(board.current_position, move, 'b'):
+            stalemate_black = False
+
+    if (stalemate_white and colorTurn == 'w') or (stalemate_black and colorTurn == 'b'):
+        return "Stalemate"
+
+    return None
 
 
 def valid_boards(board_array, turnColor):
