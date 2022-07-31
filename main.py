@@ -9,7 +9,7 @@ pygame.init()
 pygame.display.set_caption("Chess")
 pygame.display.set_icon(board.blackPawn)
 
-FPS = 60
+FPS = 300
 fpsClock = pygame.time.Clock()
 
 def main():
@@ -27,6 +27,7 @@ def main():
                 # press R to reset board to starting position
                 if event.key == pygame.K_r:
                     board.RESET_PIECES()
+                # press left arrow to go back one move
                 if event.key == pygame.K_LEFT:
                     board.MAKE_PREVIOUS_TURN()
 

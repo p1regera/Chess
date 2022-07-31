@@ -18,7 +18,7 @@ TRANSPARENT = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
 
 # board colors
 color = None
-white = (255, 255, 255)
+white = (234, 233, 210)
 black = (0, 0, 0)
 blue = (75, 115, 153)
 
@@ -37,6 +37,10 @@ canWLongCastle = canWShortCastle = True
 canBLongCastle = canBShortCastle = True
 
 pygame.mixer.init()
+
+# load in image of chess board
+blueBoard = pygame.image.load("./themes/blueBoard.png")
+blueBoard = pygame.transform.scale(blueBoard, (WIDTH, HEIGHT))
 
 # load white/black pieces
 
@@ -105,32 +109,34 @@ stalemateSound = pygame.mixer.Sound("./sfx/stalemate.wav")
 
 
 def CREATE_CHESSBOARD():
-    x = y = 0
+    WINDOW.blit(blueBoard, (0,0))
+    # x = y = 0
+    #
+    # def create_horizontal_rects(x, y, color, color2):
+    #     for i in range(8):
+    #
+    #         rects = pygame.Rect(x, y, RECT_WIDTH, RECT_HEIGHT)
+    #
+    #         if i % 2 == 0:
+    #             pygame.draw.rect(WINDOW, color, rects)
+    #             x += RECT_WIDTH
+    #
+    #         else:
+    #             pygame.draw.rect(WINDOW, color2, rects)
+    #             x += RECT_WIDTH
+    #
+    # x = 0
+    #
+    # for i in range(8):
+    #
+    #     if i % 2 == 0:
+    #         create_horizontal_rects(x, y, white, blue)
+    #         y += RECT_HEIGHT
+    #
+    #     if i % 2 == 1:
+    #         create_horizontal_rects(x, y, blue, white)
+    #         y += RECT_WIDTH
 
-    def create_horizontal_rects(x, y, color, color2):
-        for i in range(8):
-
-            rects = pygame.Rect(x, y, RECT_WIDTH, RECT_HEIGHT)
-
-            if i % 2 == 0:
-                pygame.draw.rect(WINDOW, color, rects)
-                x += RECT_WIDTH
-
-            else:
-                pygame.draw.rect(WINDOW, color2, rects)
-                x += RECT_WIDTH
-
-    x = 0
-
-    for i in range(8):
-
-        if i % 2 == 0:
-            create_horizontal_rects(x, y, white, blue)
-            y += RECT_HEIGHT
-
-        if i % 2 == 1:
-            create_horizontal_rects(x, y, blue, white)
-            y += RECT_WIDTH
 
 # TODO: Move this function into Logic file
 def COLOR_SQUARE(rank, file):
@@ -151,8 +157,7 @@ def PLAY_MOVE_SOUND():
 
     if has_captured(previous_position, current_position):
         pygame.mixer.Sound.play(captureSound)
-
-    if is_in_check(current_position, colorTurn) != "Neither":
+    elif is_in_check(current_position, colorTurn) != "Neither":
         pygame.mixer.Sound.play(checkSound)
     # elif hasCastled():
         # pygame.mixer.Sound.play(castleSound)
