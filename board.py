@@ -16,6 +16,9 @@ RECT_HEIGHT = (HEIGHT - OFFSET) / 8
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 TRANSPARENT = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
 
+# board
+preferredBoard = None
+
 # board colors
 color = None
 white = (234, 233, 210)
@@ -33,14 +36,20 @@ current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w K
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
-canWLongCastle = canWShortCastle = True
-canBLongCastle = canBShortCastle = True
 
 pygame.mixer.init()
 
-# load in image of chess board
+# load in image of chess board, stores your preferred board
+preferredBoard = None
+
 blueBoard = pygame.image.load("./themes/blueBoard.png")
 blueBoard = pygame.transform.scale(blueBoard, (WIDTH, HEIGHT))
+
+# default board
+tournamentBoard = pygame.image.load("./themes/tournamentBoard.png")
+tournamentBoard = pygame.transform.scale(tournamentBoard, (WIDTH, HEIGHT))
+preferredBoard = tournamentBoard
+
 
 # load white/black pieces
 
@@ -109,7 +118,9 @@ stalemateSound = pygame.mixer.Sound("./sfx/stalemate.wav")
 
 
 def CREATE_CHESSBOARD():
-    WINDOW.blit(blueBoard, (0,0))
+    global preferredBoard
+    WINDOW.blit(preferredBoard, (0,0))
+
     # x = y = 0
     #
     # def create_horizontal_rects(x, y, color, color2):
