@@ -32,11 +32,17 @@ inCheckRed = (237, 62, 54)
 captureRed = (247, 100, 99)
 
 # board variables
+<<<<<<< Updated upstream
 current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 
+=======
+current_position = fen_to_array("3k4/8/8/8/8/8/PPPPPPPP/RNBQKBNR")
+>>>>>>> Stashed changes
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
+isCheckmate = False
+isStalemate = False
 
 pygame.mixer.init()
 
@@ -53,46 +59,61 @@ newspaperBoard = pygame.transform.scale(newspaperBoard, (WIDTH, HEIGHT))
 tournamentBoard = pygame.image.load("./themes/tournamentBoard.png")
 tournamentBoard = pygame.transform.scale(tournamentBoard, (WIDTH, HEIGHT))
 
-preferredBoard = blueBoard
+woodBoard = pygame.image.load("./themes/woodBoard.png")
+woodBoard = pygame.transform.scale(woodBoard, (WIDTH, HEIGHT))
 
+preferredBoard = woodBoard
+
+# game status
+bMate = pygame.image.load("./effects/bMate.png")
+bMate = pygame.transform.scale(bMate, (WIDTH / 24, HEIGHT / 24))
+
+wMate = pygame.image.load("./effects/wMate.png")
+wMate = pygame.transform.scale(wMate, (WIDTH / 24, HEIGHT / 24))
+
+stalemate = pygame.image.load("./effects/stalemate.png")
+stalemate = pygame.transform.scale(stalemate, (WIDTH / 24, HEIGHT / 24))
+
+won = pygame.image.load("./effects/won.png")
+won = pygame.transform.scale(won, (WIDTH / 24, HEIGHT / 24))
 
 # load white/black pieces
-blackKing = pygame.image.load("./icons/bk.png")
+blackKing = pygame.image.load("pieces/bk.png")
 blackKing = pygame.transform.scale(blackKing, (WIDTH / 8, HEIGHT / 8))
 
-blackQueen = pygame.image.load("./icons/bq.png")
+blackQueen = pygame.image.load("pieces/bq.png")
 blackQueen = pygame.transform.scale(blackQueen, (WIDTH / 8, HEIGHT / 8))
 
-blackBishop = pygame.image.load("./icons/bb.png")
+blackBishop = pygame.image.load("pieces/bb.png")
 blackBishop = pygame.transform.scale(blackBishop, (WIDTH / 8, HEIGHT / 8))
 
-blackKnight = pygame.image.load("./icons/bn.png")
+blackKnight = pygame.image.load("pieces/bn.png")
 blackKnight = pygame.transform.scale(blackKnight, (WIDTH / 8, HEIGHT / 8))
 
-blackRook = pygame.image.load("./icons/br.png")
+blackRook = pygame.image.load("pieces/br.png")
 blackRook = pygame.transform.scale(blackRook, (WIDTH / 8, HEIGHT / 8))
 
-blackPawn = pygame.image.load("./icons/bp.png")
+blackPawn = pygame.image.load("pieces/bp.png")
 blackPawn = pygame.transform.scale(blackPawn, (WIDTH / 8, HEIGHT / 8))
 
 ########################################################################################################################
 
-whiteKing = pygame.image.load("./icons/wk.png")
+whiteKing = pygame.image.load("pieces/wk.png")
 whiteKing = pygame.transform.scale(whiteKing, (WIDTH / 8, HEIGHT / 8))
 
-whiteQueen = pygame.image.load("./icons/wq.png")
+whiteQueen = pygame.image.load("pieces/wq.png")
 whiteQueen = pygame.transform.scale(whiteQueen, (WIDTH / 8, HEIGHT / 8))
 
-whiteBishop = pygame.image.load("./icons/wb.png")
+whiteBishop = pygame.image.load("pieces/wb.png")
 whiteBishop = pygame.transform.scale(whiteBishop, (WIDTH / 8, HEIGHT / 8))
 
-whiteKnight = pygame.image.load("./icons/wn.png")
+whiteKnight = pygame.image.load("pieces/wn.png")
 whiteKnight = pygame.transform.scale(whiteKnight, (WIDTH / 8, HEIGHT / 8))
 
-whiteRook = pygame.image.load("./icons/wr.png")
+whiteRook = pygame.image.load("pieces/wr.png")
 whiteRook = pygame.transform.scale(whiteRook, (WIDTH / 8, HEIGHT / 8))
 
-whitePawn = pygame.image.load("./icons/wp.png")
+whitePawn = pygame.image.load("pieces/wp.png")
 whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
 
 ############################################################################
@@ -124,34 +145,6 @@ stalemateSound = pygame.mixer.Sound("./sfx/stalemate.wav")
 def CREATE_CHESSBOARD():
     global preferredBoard
     WINDOW.blit(preferredBoard, (0,0))
-
-    # x = y = 0
-    #
-    # def create_horizontal_rects(x, y, color, color2):
-    #     for i in range(8):
-    #
-    #         rects = pygame.Rect(x, y, RECT_WIDTH, RECT_HEIGHT)
-    #
-    #         if i % 2 == 0:
-    #             pygame.draw.rect(WINDOW, color, rects)
-    #             x += RECT_WIDTH
-    #
-    #         else:
-    #             pygame.draw.rect(WINDOW, color2, rects)
-    #             x += RECT_WIDTH
-    #
-    # x = 0
-    #
-    # for i in range(8):
-    #
-    #     if i % 2 == 0:
-    #         create_horizontal_rects(x, y, white, blue)
-    #         y += RECT_HEIGHT
-    #
-    #     if i % 2 == 1:
-    #         create_horizontal_rects(x, y, blue, white)
-    #         y += RECT_WIDTH
-
 
 # TODO: Move this function into Logic file
 def COLOR_SQUARE(rank, file):
@@ -191,7 +184,7 @@ def CALCULATE_PIECE_SLOPE(y1, x1, y2, x2):
 
 def MOVE_PIECES(mousePos):
     # return the modified array after an attempted move
-    global previous_position, current_position, colorTurn
+    global previous_position, current_position, colorTurn, isCheckmate, isStalemate
     castling = False
     sp_copy = []
 
@@ -239,16 +232,20 @@ def MOVE_PIECES(mousePos):
         else:
             colorTurn = "w"
     if valid_move == "White Checkmated":
+        isCheckmate = True
         print("White Checkmated")
     if valid_move == "Black Checkmated":
+        isCheckmate = True
         print("Black Checkmated")
     if check_stalemate(colorTurn) and valid_move not in ["White Checkmated", "Black Checkmated"]:
+        isStalemate = True
         print("Stalemate")
 
 
-def DISPLAY_EFFECTS():
+def DISPLAY_PIECE_EFFECTS():
     # blue highlight selection when a piece is selected
-    global colorTurn
+    global colorTurn, current_position
+
     if len(selectedPiece) == 1:
         # don't display effects if not the proper color turn
         if colorTurn == "w" and current_position[selectedPiece[0][0]][selectedPiece[0][1]].islower():
@@ -286,10 +283,35 @@ def DISPLAY_EFFECTS():
                     if piece == "k":
                         pygame.draw.rect(WINDOW, inCheckRed, pygame.Rect(j * WIDTH // 8, i * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
 
+def DISPLAY_BOARD_EFFECTS():
+    global colorTurn, current_position, previous_position
+    if len(previous_position) > 0:
+        if isCheckmate and colorTurn == "b":
+            for i, pieces in enumerate(current_position):
+                for j, piece in enumerate(pieces):
+                    if piece == "K":
+                        WINDOW.blit(won, (j * WIDTH // 8, i * HEIGHT // 8))
+                    elif piece == "k":
+                        WINDOW.blit(bMate, (j * WIDTH // 8, i * HEIGHT // 8))
+        elif isCheckmate and colorTurn == "w":
+            for i, pieces in enumerate(current_position):
+                for j, piece in enumerate(pieces):
+                    if piece == "K":
+                        WINDOW.blit(wMate, (j * WIDTH // 8, i * HEIGHT // 8))
+                        print('oi')
+                    elif piece == "k":
+                        WINDOW.blit(won, (j * WIDTH // 8, i * HEIGHT // 8))
+        elif isStalemate:
+            for i, pieces in enumerate(current_position):
+                for j, piece in enumerate(pieces):
+                    if piece == "K" and colorTurn == "w":
+                        WINDOW.blit(stalemate, (j * WIDTH // 8, i * HEIGHT // 8))
+                    elif piece == "k" and colorTurn == "b":
+                        WINDOW.blit(stalemate, (j * WIDTH // 8, i * HEIGHT // 8))
 
 # displays pieces based on current board position
 def DISPLAY_PIECES():
-    # display all the piece icons
+    # display all the piece pieces
     for i in range(8):
         for j in range(8):
             # black pieces

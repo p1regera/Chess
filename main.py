@@ -20,7 +20,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and not board.isCheckmate and not board.isStalemate:
                 mousePos = pygame.mouse.get_pos()
                 board.MOVE_PIECES(mousePos)
             if event.type == pygame.KEYDOWN:
@@ -31,8 +31,9 @@ def main():
                 if event.key == pygame.K_LEFT:
                     board.MAKE_PREVIOUS_TURN()
 
-        board.DISPLAY_EFFECTS()
+        board.DISPLAY_PIECE_EFFECTS()
         board.DISPLAY_PIECES()
+        board.DISPLAY_BOARD_EFFECTS()
 
         pygame.display.update()
         fpsClock.tick(FPS)
