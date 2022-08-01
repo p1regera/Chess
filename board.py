@@ -204,30 +204,30 @@ def DISPLAY_PIECES():
         for j in range(8):
             # black pieces
             if current_position[i][j] == "k":
-                WINDOW.blit(preferredBlackKing, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(blackKing, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "q":
-                WINDOW.blit(preferredBlackQueen, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(blackQueen, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "r":
-                WINDOW.blit(preferredBlackRook, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(blackRook, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "b":
-                WINDOW.blit(preferredBlackBishop, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(blackBishop, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "n":
-                WINDOW.blit(preferredBlackKnight, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(blackKnight, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "p":
-                WINDOW.blit(preferredBlackPawn, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(blackPawn, (j * WIDTH / 8, i * HEIGHT / 8))
             # white pieces
             if current_position[i][j] == "K":
-                WINDOW.blit(preferredWhiteKing, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(whiteKing, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "Q":
-                WINDOW.blit(preferredWhiteQueen, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(whiteQueen, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "R":
-                WINDOW.blit(preferredWhiteRook, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(whiteRook, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "B":
-                WINDOW.blit(preferredWhiteBishop, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(whiteBishop, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "N":
-                WINDOW.blit(preferredWhiteKnight, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(whiteKnight, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "P":
-                WINDOW.blit(preferredWhitePawn, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(whitePawn, (j * WIDTH / 8, i * HEIGHT / 8))
 
 
 # change board position to the last saved board position

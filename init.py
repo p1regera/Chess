@@ -37,110 +37,52 @@ tournamentBoard = pygame.transform.scale(tournamentBoard, (WIDTH, HEIGHT))
 woodBoard = pygame.image.load("./themes/woodBoard.png")
 woodBoard = pygame.transform.scale(woodBoard, (WIDTH, HEIGHT))
 
-preferredBoard = woodBoard
+preferredBoard = newspaperBoard
 
 # load all pieces
-preferredPieces = None
-
-# base theme
-baseTheme = "base"
-
-# black pieces
-baseBlackKing = pygame.image.load("pieces/" + baseTheme + "/bk.png")
-baseBlackKing = pygame.transform.scale(baseBlackKing, (WIDTH / 8, HEIGHT / 8))
-
-baseBlackQueen = pygame.image.load("pieces/" + baseTheme + "/bq.png")
-baseBlackQueen = pygame.transform.scale(baseBlackQueen, (WIDTH / 8, HEIGHT / 8))
-
-baseBlackBishop = pygame.image.load("pieces/" + baseTheme + "/bb.png")
-baseBlackBishop = pygame.transform.scale(baseBlackBishop, (WIDTH / 8, HEIGHT / 8))
-
-baseBlackKnight = pygame.image.load("pieces/" + baseTheme + "/bn.png")
-baseBlackKnight = pygame.transform.scale(baseBlackKnight, (WIDTH / 8, HEIGHT / 8))
-
-baseBlackRook = pygame.image.load("pieces/" + baseTheme + "/br.png")
-baseBlackRook = pygame.transform.scale(baseBlackRook, (WIDTH / 8, HEIGHT / 8))
-
-baseBlackPawn = pygame.image.load("pieces/" + baseTheme + "/bp.png")
-baseBlackPawn = pygame.transform.scale(baseBlackPawn, (WIDTH / 8, HEIGHT / 8))
-
-# white pieces
-
-baseWhiteKing = pygame.image.load("pieces/" + baseTheme + "/wk.png")
-baseWhiteKing = pygame.transform.scale(baseWhiteKing, (WIDTH / 8, HEIGHT / 8))
-
-baseWhiteQueen = pygame.image.load("pieces/" + baseTheme + "/wq.png")
-baseWhiteQueen = pygame.transform.scale(baseWhiteQueen, (WIDTH / 8, HEIGHT / 8))
-
-baseWhiteBishop = pygame.image.load("pieces/" + baseTheme + "/wb.png")
-baseWhiteBishop = pygame.transform.scale(baseWhiteBishop, (WIDTH / 8, HEIGHT / 8))
-
-baseWhiteKnight = pygame.image.load("pieces/" + baseTheme + "/wn.png")
-baseWhiteKnight = pygame.transform.scale(baseWhiteKnight, (WIDTH / 8, HEIGHT / 8))
-
-baseWhiteRook = pygame.image.load("pieces/" + baseTheme + "/wr.png")
-baseWhiteRook = pygame.transform.scale(baseWhiteRook, (WIDTH / 8, HEIGHT / 8))
-
-baseWhitePawn = pygame.image.load("pieces/" + baseTheme + "/wp.png")
-baseWhitePawn = pygame.transform.scale(baseWhitePawn, (WIDTH / 8, HEIGHT / 8))
-
-# wood theme
 woodTheme = "wood"
+newspaperTheme = "newspaper"
+tournamentTheme = "tournament"
 
-# black pieces
-woodBlackKing = pygame.image.load("pieces/" + woodTheme + "/bk.png")
-woodBlackKing = pygame.transform.scale(woodBlackKing, (WIDTH / 8, HEIGHT / 8))
+preferredPieces = newspaperTheme
 
-woodBlackQueen = pygame.image.load("pieces/" + woodTheme + "/bq.png")
-woodBlackQueen = pygame.transform.scale(woodBlackQueen, (WIDTH / 8, HEIGHT / 8))
+blackKing = pygame.image.load("pieces/" + preferredPieces + "/bk.png")
+blackKing = pygame.transform.scale(blackKing, (WIDTH / 8, HEIGHT / 8))
 
-woodBlackBishop = pygame.image.load("pieces/" + woodTheme + "/bb.png")
-woodBlackBishop = pygame.transform.scale(woodBlackBishop, (WIDTH / 8, HEIGHT / 8))
+blackQueen = pygame.image.load("pieces/" + preferredPieces + "/bq.png")
+blackQueen = pygame.transform.scale(blackQueen, (WIDTH / 8, HEIGHT / 8))
 
-woodBlackKnight = pygame.image.load("pieces/" + woodTheme + "/bn.png")
-woodBlackKnight = pygame.transform.scale(woodBlackKnight, (WIDTH / 8, HEIGHT / 8))
+blackBishop = pygame.image.load("pieces/" + preferredPieces + "/bb.png")
+blackBishop = pygame.transform.scale(blackBishop, (WIDTH / 8, HEIGHT / 8))
 
-woodBlackRook = pygame.image.load("pieces/" + woodTheme + "/br.png")
-woodBlackRook = pygame.transform.scale(woodBlackRook, (WIDTH / 8, HEIGHT / 8))
+blackKnight = pygame.image.load("pieces/" + preferredPieces + "/bn.png")
+blackKnight = pygame.transform.scale(blackKnight, (WIDTH / 8, HEIGHT / 8))
 
-woodBlackPawn = pygame.image.load("pieces/" + woodTheme + "/bp.png")
-woodBlackPawn = pygame.transform.scale(woodBlackPawn, (WIDTH / 8, HEIGHT / 8))
+blackRook = pygame.image.load("pieces/" + preferredPieces + "/br.png")
+blackRook = pygame.transform.scale(blackRook, (WIDTH / 8, HEIGHT / 8))
+
+blackPawn = pygame.image.load("pieces/" + preferredPieces + "/bp.png")
+blackPawn = pygame.transform.scale(blackPawn, (WIDTH / 8, HEIGHT / 8))
 
 # white pieces
 
-woodWhiteKing = pygame.image.load("pieces/" + woodTheme + "/wk.png")
-woodWhiteKing = pygame.transform.scale(woodWhiteKing, (WIDTH / 8, HEIGHT / 8))
+whiteKing = pygame.image.load("pieces/" + preferredPieces + "/wk.png")
+whiteKing = pygame.transform.scale(whiteKing, (WIDTH / 8, HEIGHT / 8))
 
-woodWhiteQueen = pygame.image.load("pieces/" + woodTheme + "/wq.png")
-woodWhiteQueen = pygame.transform.scale(woodWhiteQueen, (WIDTH / 8, HEIGHT / 8))
+whiteQueen = pygame.image.load("pieces/" + preferredPieces + "/wq.png")
+whiteQueen = pygame.transform.scale(whiteQueen, (WIDTH / 8, HEIGHT / 8))
 
-woodWhiteBishop = pygame.image.load("pieces/" + woodTheme + "/wb.png")
-woodWhiteBishop = pygame.transform.scale(woodWhiteBishop, (WIDTH / 8, HEIGHT / 8))
+whiteBishop = pygame.image.load("pieces/" + preferredPieces + "/wb.png")
+whiteBishop = pygame.transform.scale(whiteBishop, (WIDTH / 8, HEIGHT / 8))
 
-woodWhiteKnight = pygame.image.load("pieces/" + woodTheme + "/wn.png")
-woodWhiteKnight = pygame.transform.scale(woodWhiteKnight, (WIDTH / 8, HEIGHT / 8))
+whiteKnight = pygame.image.load("pieces/" + preferredPieces + "/wn.png")
+whiteKnight = pygame.transform.scale(whiteKnight, (WIDTH / 8, HEIGHT / 8))
 
-woodWhiteRook = pygame.image.load("pieces/" + woodTheme + "/wr.png")
-woodWhiteRook = pygame.transform.scale(woodWhiteRook, (WIDTH / 8, HEIGHT / 8))
+whiteRook = pygame.image.load("pieces/" + preferredPieces + "/wr.png")
+whiteRook = pygame.transform.scale(whiteRook, (WIDTH / 8, HEIGHT / 8))
 
-woodWhitePawn = pygame.image.load("pieces/" + woodTheme + "/wp.png")
-woodWhitePawn = pygame.transform.scale(woodWhitePawn, (WIDTH / 8, HEIGHT / 8))
-
-
-# TODO: figure out how to streamline changing piece theme (i.e. changing 1 variable instead of 12...)
-preferredWhitePawn = woodWhitePawn
-preferredWhiteRook = woodWhiteRook
-preferredWhiteBishop = woodWhiteBishop
-preferredWhiteKnight = woodWhiteKnight
-preferredWhiteQueen = woodWhiteQueen
-preferredWhiteKing = woodWhiteKing
-
-preferredBlackPawn = woodBlackPawn
-preferredBlackRook = woodBlackRook
-preferredBlackBishop = woodBlackBishop
-preferredBlackKnight = woodBlackKnight
-preferredBlackQueen = woodBlackQueen
-preferredBlackKing = woodBlackKing
+whitePawn = pygame.image.load("pieces/" + preferredPieces + "/wp.png")
+whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
 
 pygame.mixer.init()
 
