@@ -2,6 +2,7 @@ import pygame
 import sys
 
 import board
+import engine
 
 pygame.init()
 
@@ -21,8 +22,11 @@ def main():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN and not board.isCheckmate and not board.isStalemate:
+                engine.find_valid_board_states([])
                 mousePos = pygame.mouse.get_pos()
                 board.MOVE_PIECES(mousePos)
+
+
             if event.type == pygame.KEYDOWN:
                 # press R to reset board to starting position
                 if event.key == pygame.K_r:

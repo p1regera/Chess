@@ -37,14 +37,16 @@ tournamentBoard = pygame.transform.scale(tournamentBoard, (WIDTH, HEIGHT))
 woodBoard = pygame.image.load("./themes/woodBoard.png")
 woodBoard = pygame.transform.scale(woodBoard, (WIDTH, HEIGHT))
 
-preferredBoard = newspaperBoard
+preferredBoard = tournamentBoard
 
 # load all pieces
+baseTheme = "base"
 woodTheme = "wood"
 newspaperTheme = "newspaper"
 tournamentTheme = "tournament"
 
-preferredPieces = newspaperTheme
+# user-defined theme
+preferredPieces = baseTheme
 
 blackKing = pygame.image.load("pieces/" + preferredPieces + "/bk.png")
 blackKing = pygame.transform.scale(blackKing, (WIDTH / 8, HEIGHT / 8))

@@ -101,8 +101,6 @@ def MOVE_PIECES(mousePos):
 
     valid_move = is_valid_move(current_position, new_current_position, colorTurn)
 
-    # print(en_passant_capture)
-
     if valid_move or castling:
         previous_position.append(copy.deepcopy(current_position))
         current_position = new_current_position
@@ -111,6 +109,7 @@ def MOVE_PIECES(mousePos):
 
         if castling:
             current_position = castling
+
         # play correct move sound
         PLAY_MOVE_SOUND()
 
