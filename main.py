@@ -7,7 +7,7 @@ pygame.init()
 
 # set window title to "Chess"
 pygame.display.set_caption("Chess")
-pygame.display.set_icon(board.blackPawn)
+pygame.display.set_icon(board.baseBlackPawn)
 
 FPS = 300
 fpsClock = pygame.time.Clock()

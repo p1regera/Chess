@@ -2,7 +2,7 @@ import pygame
 import math
 from init import *
 
-from Logic import *
+from logic import *
 from piece_movement import promote, en_passant
 
 colorTurn = 'w'
@@ -186,7 +186,6 @@ def DISPLAY_BOARD_EFFECTS():
                 for j, piece in enumerate(pieces):
                     if piece == "K":
                         WINDOW.blit(wMate, (j * WIDTH // 8, i * HEIGHT // 8))
-                        print('oi')
                     elif piece == "k":
                         WINDOW.blit(won, (j * WIDTH // 8, i * HEIGHT // 8))
         elif isStalemate:
@@ -205,30 +204,30 @@ def DISPLAY_PIECES():
         for j in range(8):
             # black pieces
             if current_position[i][j] == "k":
-                WINDOW.blit(blackKing, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredBlackKing, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "q":
-                WINDOW.blit(blackQueen, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredBlackQueen, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "r":
-                WINDOW.blit(blackRook, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredBlackRook, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "b":
-                WINDOW.blit(blackBishop, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredBlackBishop, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "n":
-                WINDOW.blit(blackKnight, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredBlackKnight, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "p":
-                WINDOW.blit(blackPawn, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredBlackPawn, (j * WIDTH / 8, i * HEIGHT / 8))
             # white pieces
             if current_position[i][j] == "K":
-                WINDOW.blit(whiteKing, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredWhiteKing, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "Q":
-                WINDOW.blit(whiteQueen, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredWhiteQueen, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "R":
-                WINDOW.blit(whiteRook, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredWhiteRook, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "B":
-                WINDOW.blit(whiteBishop, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredWhiteBishop, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "N":
-                WINDOW.blit(whiteKnight, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredWhiteKnight, (j * WIDTH / 8, i * HEIGHT / 8))
             if current_position[i][j] == "P":
-                WINDOW.blit(whitePawn, (j * WIDTH / 8, i * HEIGHT / 8))
+                WINDOW.blit(preferredWhitePawn, (j * WIDTH / 8, i * HEIGHT / 8))
 
 
 # change board position to the last saved board position
@@ -252,10 +251,12 @@ def MAKE_PREVIOUS_TURN():
 
 # reset board to starting position
 def RESET_PIECES():
-    global current_position, colorTurn
+    global current_position, colorTurn, isCheckmate, isStalemate
     current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     selectedPiece.clear()
     colorTurn = "w"
+    isCheckmate = False
+    isStalemate = False
 
     pygame.mixer.Sound.play(gameStartSound)
 

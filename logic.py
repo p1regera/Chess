@@ -1,7 +1,6 @@
 import re
 import time
-import board
-import copy
+
 from piece_movement import *
 
 white_q_castle = True
