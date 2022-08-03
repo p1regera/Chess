@@ -1,5 +1,4 @@
 import board
-import copy
 
 
 def is_opposite_color(piece, target_piece):

@@ -6,7 +6,6 @@ def find_valid_board_states(castling_flags):
     # finds potential boards from current position
     potential_boards = valid_boards(board.current_position, board.colorTurn)
     valid_board_list = []
-    print("Color turn:" + board.colorTurn)
 
     # add in 4 castling boards from current position
     # castling flags: [whiteShortCastle, whiteLongCastle, blackShortCastle, blackLongCastle]
