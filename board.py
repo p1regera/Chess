@@ -1,24 +1,16 @@
 import pygame
 import math
-import copy
-import time
+from init import *
 
-from Logic import *
-from piece_movement import promote
+from logic import *
+from piece_movement import promote, en_passant
+import copy
 
 colorTurn = 'w'
 
-# window / pygame variables
-WIDTH = HEIGHT = 800
-OFFSET = 0
-RECT_WIDTH = (WIDTH - OFFSET) / 8
-RECT_HEIGHT = (HEIGHT - OFFSET) / 8
-WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
-TRANSPARENT = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
-
 # board colors
 color = None
-white = (255, 255, 255)
+white = (234, 233, 210)
 black = (0, 0, 0)
 blue = (75, 115, 153)
 
@@ -33,10 +25,7 @@ current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w K
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
-<<<<<<< Updated upstream
-=======
 castling = False
->>>>>>> Stashed changes
 
 pygame.mixer.init()
 
@@ -105,34 +94,13 @@ checkmateSound = pygame.mixer.Sound("./sfx/checkmate.wav")
 pygame.mixer.music.load("./sfx/stalemate.wav")
 stalemateSound = pygame.mixer.Sound("./sfx/stalemate.wav")
 
+isCheckmate = False
+isStalemate = False
+
 
 def CREATE_CHESSBOARD():
-    x = y = 0
+    WINDOW.blit(preferredBoard, (0,0))
 
-    def create_horizontal_rects(x, y, color, color2):
-        for i in range(8):
-
-            rects = pygame.Rect(x, y, RECT_WIDTH, RECT_HEIGHT)
-
-            if i % 2 == 0:
-                pygame.draw.rect(WINDOW, color, rects)
-                x += RECT_WIDTH
-
-            else:
-                pygame.draw.rect(WINDOW, color2, rects)
-                x += RECT_WIDTH
-
-    x = 0
-
-    for i in range(8):
-
-        if i % 2 == 0:
-            create_horizontal_rects(x, y, white, blue)
-            y += RECT_HEIGHT
-
-        if i % 2 == 1:
-            create_horizontal_rects(x, y, blue, white)
-            y += RECT_WIDTH
 
 # TODO: Move this function into Logic file
 def COLOR_SQUARE(rank, file):
@@ -155,12 +123,13 @@ def PLAY_MOVE_SOUND():
         pygame.mixer.Sound.play(captureSound)
     if castling:
         pygame.mixer.Sound.play(castlingSound)
-    if is_in_check(current_position, colorTurn) != "Neither":
+    elif is_in_check(current_position, colorTurn) != "Neither":
         pygame.mixer.Sound.play(checkSound)
     # elif hasCastled():
         # pygame.mixer.Sound.play(castleSound)
     else:
         pygame.mixer.Sound.play(moveSound)
+
 
 def CALCULATE_PIECE_SLOPE(y1, x1, y2, x2):
     y1 = -y1
@@ -174,12 +143,9 @@ def CALCULATE_PIECE_SLOPE(y1, x1, y2, x2):
 
 def MOVE_PIECES(mousePos):
     # return the modified array after an attempted move
-<<<<<<< Updated upstream
-    global previous_position, current_position, colorTurn
-=======
-    global previous_position, current_position, colorTurn, castling
+    global previous_position, current_position, colorTurn, isCheckmate, isStalemate
+    castling = False
     sp_copy = []
->>>>>>> Stashed changes
 
     # modified array after move
     new_current_position = copy.deepcopy(current_position)
@@ -190,6 +156,9 @@ def MOVE_PIECES(mousePos):
     selectedPiece.append([rank, file])
 
     if len(selectedPiece) == 2: # two squares have been selected
+        sp_copy = copy.deepcopy(selectedPiece)
+        castling = is_castling(new_current_position, new_current_position[selectedPiece[0][0]][selectedPiece[0][1]],
+                               [selectedPiece[1][0], selectedPiece[1][1]])
         new_current_position[selectedPiece[1][0]][selectedPiece[1][1]] = new_current_position[selectedPiece[0][0]][selectedPiece[0][1]]
         new_current_position[selectedPiece[0][0]][selectedPiece[0][1]] = '0'
         selectedPiece.clear()
@@ -204,13 +173,14 @@ def MOVE_PIECES(mousePos):
 
     valid_move = is_valid_move(current_position, new_current_position, colorTurn)
 
-<<<<<<< Updated upstream
-    if valid_move:
-=======
     if valid_move or castling:
->>>>>>> Stashed changes
         previous_position.append(copy.deepcopy(current_position))
         current_position = new_current_position
+
+        en_passant(previous_position[-1], sp_copy[0], sp_copy[1])
+
+        if castling:
+            current_position = castling
 
         # play correct move sound
         PLAY_MOVE_SOUND()
@@ -220,14 +190,20 @@ def MOVE_PIECES(mousePos):
         else:
             colorTurn = "w"
     if valid_move == "White Checkmated":
+        isCheckmate = True
         print("White Checkmated")
     if valid_move == "Black Checkmated":
+        isCheckmate = True
         print("Black Checkmated")
+    if check_stalemate(colorTurn) and valid_move not in ["White Checkmated", "Black Checkmated"]:
+        isStalemate = True
+        print("Stalemate")
 
 
-def DISPLAY_EFFECTS():
+def DISPLAY_PIECE_EFFECTS():
     # blue highlight selection when a piece is selected
-    global colorTurn
+    global colorTurn, current_position
+
     if len(selectedPiece) == 1:
         # don't display effects if not the proper color turn
         if colorTurn == "w" and current_position[selectedPiece[0][0]][selectedPiece[0][1]].islower():
@@ -266,9 +242,35 @@ def DISPLAY_EFFECTS():
                         pygame.draw.rect(WINDOW, inCheckRed, pygame.Rect(j * WIDTH // 8, i * HEIGHT // 8, WIDTH // 8, HEIGHT // 8))
 
 
+def DISPLAY_BOARD_EFFECTS():
+    global colorTurn, current_position, previous_position
+    if len(previous_position) > 0:
+        if isCheckmate and colorTurn == "b":
+            for i, pieces in enumerate(current_position):
+                for j, piece in enumerate(pieces):
+                    if piece == "K":
+                        WINDOW.blit(won, (j * WIDTH // 8, i * HEIGHT // 8))
+                    elif piece == "k":
+                        WINDOW.blit(bMate, (j * WIDTH // 8, i * HEIGHT // 8))
+        elif isCheckmate and colorTurn == "w":
+            for i, pieces in enumerate(current_position):
+                for j, piece in enumerate(pieces):
+                    if piece == "K":
+                        WINDOW.blit(wMate, (j * WIDTH // 8, i * HEIGHT // 8))
+                    elif piece == "k":
+                        WINDOW.blit(won, (j * WIDTH // 8, i * HEIGHT // 8))
+        elif isStalemate:
+            for i, pieces in enumerate(current_position):
+                for j, piece in enumerate(pieces):
+                    if piece == "K" and colorTurn == "w":
+                        WINDOW.blit(stalemate, (j * WIDTH // 8, i * HEIGHT // 8))
+                    elif piece == "k" and colorTurn == "b":
+                        WINDOW.blit(stalemate, (j * WIDTH // 8, i * HEIGHT // 8))
+
+
 # displays pieces based on current board position
 def DISPLAY_PIECES():
-    # display all the piece icons
+    # display all the piece pieces
     for i in range(8):
         for j in range(8):
             # black pieces
@@ -298,6 +300,7 @@ def DISPLAY_PIECES():
             if current_position[i][j] == "P":
                 WINDOW.blit(whitePawn, (j * WIDTH / 8, i * HEIGHT / 8))
 
+
 # change board position to the last saved board position
 def MAKE_PREVIOUS_TURN():
     global previous_position, current_position, colorTurn
@@ -316,12 +319,15 @@ def MAKE_PREVIOUS_TURN():
 
     PLAY_MOVE_SOUND()
 
+
 # reset board to starting position
 def RESET_PIECES():
-    global current_position, colorTurn
+    global current_position, colorTurn, isCheckmate, isStalemate
     current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     selectedPiece.clear()
     colorTurn = "w"
+    isCheckmate = False
+    isStalemate = False
 
     pygame.mixer.Sound.play(gameStartSound)
 
