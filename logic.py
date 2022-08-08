@@ -41,7 +41,7 @@ def fen_to_array(fen):
     return board_array
 
 
-def is_valid_move(prev_board_array, cur_board_array, turnColor, update_flags=True):
+def is_valid_move(prev_board_array, cur_board_array, turnColor, update_en_passant=True, update_castling_flags=True):
     global en_passant_available
     if prev_board_array == cur_board_array:
         return False
@@ -55,7 +55,6 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor, update_flags=Tru
             # If this current spot on the board is 0 and last move it was not 0, this is where the piece moved from
             if cur_board_array[i][j] == "0" and prev_board_array[i][j] != "0":
                 prev_pos = [i, j]
-                # print("prev: ", prev_pos)
                 piece = prev_board_array[i][j]
 
     # If it's not your turn, then the move is invalid
@@ -70,18 +69,20 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor, update_flags=Tru
             if ((prev_board_array[i][j] == "0" or is_opposite_color(prev_board_array[i][j], piece)) and
                     (cur_board_array[i][j] != "0" and not is_opposite_color(cur_board_array[i][j], piece))):
                 cur_pos = [i, j]
-                # print("cur: ", cur_pos)
+
+    if is_castling(prev_board_array, cur_board_array, piece, cur_pos, update_castling_flags):
+        return True
 
     # If the piece moved to a valid position (based on what type of piece), then return true
     if cur_pos not in find_valid_moves(prev_board_array, prev_pos):
         return False
 
     # Update castling parameters
-    if update_flags:
+    if update_castling_flags:
         castle_update(piece, prev_pos)
 
     # En-passant logic
-    if update_flags:
+    if update_en_passant:
         if piece in ['P', 'p'] and abs(prev_pos[0] - cur_pos[0]) == 2:
             en_passant_available = [piece, [cur_pos[0], cur_pos[1] - 1], [cur_pos[0], cur_pos[1] + 1], cur_pos[1]]
         else:
@@ -205,11 +206,11 @@ def check_stalemate(colorTurn):
     stalemate_black = True
 
     for move in white_moves:
-        if is_valid_move(board.current_position, move, 'w', False):
+        if is_valid_move(board.current_position, move, 'w', False, False):
             stalemate_white = False
 
     for move in black_moves:
-        if is_valid_move(board.current_position, move, 'b', False):
+        if is_valid_move(board.current_position, move, 'b', False, False):
             stalemate_black = False
 
     if (stalemate_white and colorTurn == 'w') or (stalemate_black and colorTurn == 'b'):
@@ -241,59 +242,70 @@ def valid_boards(board_array, turnColor):
     return valid_board_list
 
 
-def is_castling(board_array, piece, cur_pos):
-    # Returns "WQ" / "WK" / "BQ" / "BK" / False for the type of castling being attempted
+def is_castling(prev_board_array, cur_board_array, piece, cur_pos, update_flags=True):
+    # Returns board for the type of castling being attempted
     global white_q_castle
     global white_k_castle
     global black_q_castle
     global black_k_castle
 
+    cur_board_copy = copy.deepcopy(cur_board_array)
+
+    for i in range(0, 8):
+        for j in range(0, 8):
+            if cur_board_copy[i][j] == piece:
+                cur_pos = [i, j]
+
     if piece == 'K':
         if cur_pos == [7, 0] and white_q_castle:
-            if board_array[7][1] == '0' and board_array[7][2] == '0' and board_array[7][3] == '0':
-                for board in valid_boards(board_array, 'b'):
-                    if board[7][1] != '0' or board[7][2] != '0' or board[7][3] != '0' or is_in_check(board_array, 'b') in ['White', 'White Checkmated']:
+            if prev_board_array[7][1] == '0' and prev_board_array[7][2] == '0' and prev_board_array[7][3] == '0':
+                for board in valid_boards(prev_board_array, 'b'):
+                    if board[7][1] != '0' or board[7][2] != '0' or board[7][3] != '0' or is_in_check(prev_board_array, 'b') in ['White', 'White Checkmated']:
                         return False
-                board_array[7][0] = '0'
-                board_array[7][1] = 'K'
-                board_array[7][2] = 'R'
-                board_array[7][4] = '0'
-                white_q_castle = False
-                return board_array
+                cur_board_copy[7][0] = '0'
+                cur_board_copy[7][1] = 'K'
+                cur_board_copy[7][2] = 'R'
+                cur_board_copy[7][4] = '0'
+                if update_flags:
+                    white_q_castle = False
+                return cur_board_copy
         elif cur_pos == [7, 7] and white_k_castle:
-            if board_array[7][5] == '0' and board_array[7][6] == '0':
-                for board in valid_boards(board_array, 'b'):
-                    if board[7][5] != '0' or board[7][6] != '0' or is_in_check(board_array, 'b') in ['White', 'White Checkmated']:
+            if prev_board_array[7][5] == '0' and prev_board_array[7][6] == '0':
+                for board in valid_boards(prev_board_array, 'b'):
+                    if board[7][5] != '0' or board[7][6] != '0' or is_in_check(prev_board_array, 'b') in ['White', 'White Checkmated']:
                         return False
-                board_array[7][4] = '0'
-                board_array[7][5] = 'R'
-                board_array[7][6] = 'K'
-                board_array[7][7] = '0'
-                white_k_castle = False
-                return board_array
+                cur_board_copy[7][4] = '0'
+                cur_board_copy[7][5] = 'R'
+                cur_board_copy[7][6] = 'K'
+                cur_board_copy[7][7] = '0'
+                if update_flags:
+                    white_k_castle = False
+                return cur_board_copy
     elif piece == 'k':
         if cur_pos == [0, 0] and black_q_castle:
-            if board_array[0][1] == '0' and board_array[0][2] == '0' and board_array[0][3] == '0':
-                for board in valid_boards(board_array, 'w'):
-                    if board[0][1] != '0' or board[0][2] != '0' or board[0][3] != '0' or is_in_check(board_array, 'w') in ['Black', 'Black Checkmated']:
+            if prev_board_array[0][1] == '0' and prev_board_array[0][2] == '0' and prev_board_array[0][3] == '0':
+                for board in valid_boards(prev_board_array, 'w'):
+                    if board[0][1] != '0' or board[0][2] != '0' or board[0][3] != '0' or is_in_check(prev_board_array, 'w') in ['Black', 'Black Checkmated']:
                         return False
-                board_array[0][0] = '0'
-                board_array[0][1] = 'k'
-                board_array[0][2] = 'r'
-                board_array[0][4] = '0'
-                black_q_castle = False
-                return board_array
+                cur_board_copy[0][0] = '0'
+                cur_board_copy[0][1] = 'k'
+                cur_board_copy[0][2] = 'r'
+                cur_board_copy[0][4] = '0'
+                if update_flags:
+                    black_q_castle = False
+                return cur_board_copy
         elif cur_pos == [0, 7] and black_k_castle:
-            if board_array[0][5] == '0' and board_array[0][6] == '0':
-                for board in valid_boards(board_array, 'w'):
-                    if board[0][5] != '0' or board[0][6] != '0' or is_in_check(board_array, 'w') in ['Black', 'Black Checkmated']:
+            if prev_board_array[0][5] == '0' and prev_board_array[0][6] == '0':
+                for board in valid_boards(prev_board_array, 'w'):
+                    if board[0][5] != '0' or board[0][6] != '0' or is_in_check(prev_board_array, 'w') in ['Black', 'Black Checkmated']:
                         return False
-                board_array[0][4] = '0'
-                board_array[0][5] = 'k'
-                board_array[0][6] = 'r'
-                board_array[0][7] = '0'
-                black_k_castle = False
-                return board_array
+                cur_board_copy[0][4] = '0'
+                cur_board_copy[0][5] = 'k'
+                cur_board_copy[0][6] = 'r'
+                cur_board_copy[0][7] = '0'
+                if update_flags:
+                    black_k_castle = False
+                return cur_board_copy
 
     return False
 

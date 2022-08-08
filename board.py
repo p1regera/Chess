@@ -85,8 +85,8 @@ def MOVE_PIECES(mousePos):
 
     if len(selectedPiece) == 2: # two squares have been selected
         sp_copy = copy.deepcopy(selectedPiece)
-        castling = is_castling(new_current_position, new_current_position[selectedPiece[0][0]][selectedPiece[0][1]],
-                               [selectedPiece[1][0], selectedPiece[1][1]])
+        # castling = is_castling(new_current_position, new_current_position[selectedPiece[0][0]][selectedPiece[0][1]],
+        #                        [selectedPiece[1][0], selectedPiece[1][1]])
         new_current_position[selectedPiece[1][0]][selectedPiece[1][1]] = new_current_position[selectedPiece[0][0]][selectedPiece[0][1]]
         new_current_position[selectedPiece[0][0]][selectedPiece[0][1]] = '0'
         selectedPiece.clear()
@@ -99,16 +99,18 @@ def MOVE_PIECES(mousePos):
         if promote_coord[0] == 0:
             new_current_position[promote_coord[0]][promote_coord[1]] = 'Q'
 
-    valid_move = is_valid_move(current_position, new_current_position, colorTurn)
+    valid_move = is_valid_move(current_position, new_current_position, colorTurn, True, False)
 
-    if valid_move or castling:
+    if valid_move:
         previous_position.append(copy.deepcopy(current_position))
         current_position = new_current_position
 
-        en_passant(previous_position[-1], sp_copy[0], sp_copy[1])
+        castling = is_castling(previous_position[-1], current_position, previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[1][0], sp_copy[1][1]])
 
         if castling:
             current_position = castling
+
+        en_passant(previous_position[-1], sp_copy[0], sp_copy[1])
 
         # play correct move sound
         PLAY_MOVE_SOUND()
@@ -270,3 +272,7 @@ def print_boards(boards, delay):
     for board in boards:
         current_position = board
         time.sleep(delay)
+
+
+def update_board(board_array):
+    current_position = board_array

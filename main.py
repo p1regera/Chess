@@ -22,7 +22,7 @@ def main():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN and not board.isCheckmate and not board.isStalemate:
-                engine.find_valid_board_states([])
+                engine.find_valid_board_states()
                 mousePos = pygame.mouse.get_pos()
                 board.MOVE_PIECES(mousePos)
 
