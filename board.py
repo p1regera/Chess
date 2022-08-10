@@ -106,6 +106,7 @@ def MOVE_PIECES(mousePos):
         current_position = new_current_position
 
         castling = is_castling(previous_position[-1], current_position, previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[1][0], sp_copy[1][1]])
+        castle_update(previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[0][0], sp_copy[0][1]])
 
         if castling:
             current_position = castling
