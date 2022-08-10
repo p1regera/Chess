@@ -1,9 +1,12 @@
 import pygame
 import math
+import random
+
 from init import *
 
 from logic import *
 from piece_movement import promote, en_passant
+from engine import find_valid_board_states
 import copy
 
 colorTurn = 'w'
@@ -29,47 +32,6 @@ castling = False
 
 pygame.mixer.init()
 
-# load white/black pieces
-
-blackKing = pygame.image.load("./icons/blackking.png")
-blackKing = pygame.transform.scale(blackKing, (WIDTH / 8, HEIGHT / 8))
-
-blackQueen = pygame.image.load("./icons/blackqueen.png")
-blackQueen = pygame.transform.scale(blackQueen, (WIDTH / 8, HEIGHT / 8))
-
-blackBishop = pygame.image.load("./icons/blackbishop.png")
-blackBishop = pygame.transform.scale(blackBishop, (WIDTH / 8, HEIGHT / 8))
-
-blackKnight = pygame.image.load("./icons/blackknight.png")
-blackKnight = pygame.transform.scale(blackKnight, (WIDTH / 8, HEIGHT / 8))
-
-blackRook = pygame.image.load("./icons/blackrook.png")
-blackRook = pygame.transform.scale(blackRook, (WIDTH / 8, HEIGHT / 8))
-
-blackPawn = pygame.image.load("./icons/blackpawn.png")
-blackPawn = pygame.transform.scale(blackPawn, (WIDTH / 8, HEIGHT / 8))
-
-########################################################################################################################
-
-whiteKing = pygame.image.load("./icons/whiteking.png")
-whiteKing = pygame.transform.scale(whiteKing, (WIDTH / 8, HEIGHT / 8))
-
-whiteQueen = pygame.image.load("./icons/whitequeen.png")
-whiteQueen = pygame.transform.scale(whiteQueen, (WIDTH / 8, HEIGHT / 8))
-
-whiteBishop = pygame.image.load("./icons/whitebishop.png")
-whiteBishop = pygame.transform.scale(whiteBishop, (WIDTH / 8, HEIGHT / 8))
-
-whiteKnight = pygame.image.load("./icons/whiteknight.png")
-whiteKnight = pygame.transform.scale(whiteKnight, (WIDTH / 8, HEIGHT / 8))
-
-whiteRook = pygame.image.load("./icons/whiterook.png")
-whiteRook = pygame.transform.scale(whiteRook, (WIDTH / 8, HEIGHT / 8))
-
-whitePawn = pygame.image.load("./icons/whitepawn.png")
-whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
-
-############################################################################
 
 # load game sounds
 pygame.mixer.music.load("./sfx/gamestart.wav")
@@ -131,16 +93,31 @@ def PLAY_MOVE_SOUND():
         pygame.mixer.Sound.play(moveSound)
 
 
-def CALCULATE_PIECE_SLOPE(y1, x1, y2, x2):
-    y1 = -y1
-    y2 = -y2
+def CHANGE_COLOR():
+    global colorTurn
 
-    if x2 - x1 == 0:
-        return 0
+    if colorTurn == 'w':
+        colorTurn = 'b'
+    elif colorTurn == 'b':
+        colorTurn = 'w'
 
-    return (y1 - y2) / (x1 - x2)
+
+def CHANGE_CURRENT_POSITION(new_position):
+    global current_position
+
+    # check if board exists
+    if not new_position:
+        return
+
+    current_position = new_position
 
 
+def ENGINE_MOVE_PIECE():
+    CHANGE_CURRENT_POSITION(random.choice(find_valid_board_states(current_position)))
+    CHANGE_COLOR()
+
+
+# change board position based on player input
 def MOVE_PIECES(mousePos):
     # return the modified array after an attempted move
     global previous_position, current_position, colorTurn, isCheckmate, isStalemate
@@ -185,10 +162,9 @@ def MOVE_PIECES(mousePos):
         # play correct move sound
         PLAY_MOVE_SOUND()
 
-        if colorTurn == "w":
-            colorTurn = "b"
-        else:
-            colorTurn = "w"
+        # change the color turn, white to black/black to white
+        CHANGE_COLOR()
+
     if valid_move == "White Checkmated":
         isCheckmate = True
         print("White Checkmated")

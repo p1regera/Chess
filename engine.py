@@ -1,5 +1,4 @@
 from logic import *
-from board import current_position, colorTurn
 
 
 def find_valid_board_states(castling_flags):
