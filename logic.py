@@ -1,5 +1,6 @@
 import re
 import time
+import copy
 
 from piece_movement import *
 

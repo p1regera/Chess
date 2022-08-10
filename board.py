@@ -1,9 +1,13 @@
 import pygame
 import math
+import random
+
 from init import *
 
 from logic import *
 from piece_movement import promote, en_passant
+from engine import find_valid_board_states
+import copy
 
 colorTurn = 'w'
 
@@ -24,6 +28,34 @@ current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w K
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
+castling = False
+
+pygame.mixer.init()
+
+
+# load game sounds
+pygame.mixer.music.load("./sfx/gamestart.wav")
+gameStartSound = pygame.mixer.Sound("./sfx/gamestart.wav")
+pygame.mixer.Sound.play(gameStartSound)
+
+pygame.mixer.music.load("./sfx/regmove.wav")
+moveSound = pygame.mixer.Sound("./sfx/regmove.wav")
+
+pygame.mixer.music.load("./sfx/capture.wav")
+captureSound = pygame.mixer.Sound("./sfx/capture.wav")
+
+pygame.mixer.music.load("./sfx/castling.wav")
+castlingSound = pygame.mixer.Sound("./sfx/castling.wav")
+
+pygame.mixer.music.load("./sfx/check.wav")
+checkSound = pygame.mixer.Sound("./sfx/check.wav")
+
+pygame.mixer.music.load("./sfx/checkmate.wav")
+checkmateSound = pygame.mixer.Sound("./sfx/checkmate.wav")
+
+pygame.mixer.music.load("./sfx/stalemate.wav")
+stalemateSound = pygame.mixer.Sound("./sfx/stalemate.wav")
+
 isCheckmate = False
 isStalemate = False
 
@@ -51,6 +83,8 @@ def PLAY_MOVE_SOUND():
 
     if has_captured(previous_position, current_position):
         pygame.mixer.Sound.play(captureSound)
+    if castling:
+        pygame.mixer.Sound.play(castlingSound)
     elif is_in_check(current_position, colorTurn) != "Neither":
         pygame.mixer.Sound.play(checkSound)
     # elif hasCastled():
@@ -59,16 +93,31 @@ def PLAY_MOVE_SOUND():
         pygame.mixer.Sound.play(moveSound)
 
 
-def CALCULATE_PIECE_SLOPE(y1, x1, y2, x2):
-    y1 = -y1
-    y2 = -y2
+def CHANGE_COLOR():
+    global colorTurn
 
-    if x2 - x1 == 0:
-        return 0
+    if colorTurn == 'w':
+        colorTurn = 'b'
+    elif colorTurn == 'b':
+        colorTurn = 'w'
 
-    return (y1 - y2) / (x1 - x2)
+
+def CHANGE_CURRENT_POSITION(new_position):
+    global current_position
+
+    # check if board exists
+    if not new_position:
+        return
+
+    current_position = new_position
 
 
+def ENGINE_MOVE_PIECE():
+    CHANGE_CURRENT_POSITION(random.choice(find_valid_board_states(current_position)))
+    CHANGE_COLOR()
+
+
+# change board position based on player input
 def MOVE_PIECES(mousePos):
     # return the modified array after an attempted move
     global previous_position, current_position, colorTurn, isCheckmate, isStalemate
@@ -116,10 +165,9 @@ def MOVE_PIECES(mousePos):
         # play correct move sound
         PLAY_MOVE_SOUND()
 
-        if colorTurn == "w":
-            colorTurn = "b"
-        else:
-            colorTurn = "w"
+        # change the color turn, white to black/black to white
+        CHANGE_COLOR()
+
     if valid_move == "White Checkmated":
         isCheckmate = True
         print("White Checkmated")

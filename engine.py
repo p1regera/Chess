@@ -1,7 +1,6 @@
 import random
 import logic
 from logic import *
-from board import current_position, colorTurn
 
 boards = []
 recursive_pos = [fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
