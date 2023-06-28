@@ -114,7 +114,9 @@ def CHANGE_CURRENT_POSITION(new_position):
 
 
 def ENGINE_MOVE_PIECE():
-    CHANGE_CURRENT_POSITION(engine.greedy_engine())
+    _, engine_choice = engine.minimax(current_position, 3, -math.inf, math.inf, True, 'b')
+
+    CHANGE_CURRENT_POSITION(engine_choice)
     CHANGE_COLOR()
 
 

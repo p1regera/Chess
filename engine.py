@@ -3,6 +3,7 @@ import logic
 from logic import *
 
 boards = []
+engine_board = []
 recursive_pos = [fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")]
 
 def evaluate_board(board_array, turnColor):
@@ -24,27 +25,34 @@ def evaluate_board(board_array, turnColor):
 
 def minimax(board_array, depth, alpha, beta, is_maximizing, turnColor):
     if depth == 0:
-        return evaluate_board(board_array, turnColor)
+        return evaluate_board(board_array, turnColor), board_array
 
     if is_maximizing:
         max_eval = float('-inf')
+        best_board = None
         for next_board in valid_boards(board_array, turnColor):
-            eval_board = minimax(next_board, depth - 1, alpha, beta, not is_maximizing, turnColor)
-            max_eval = max(max_eval, eval_board)
+            eval_board, _ = minimax(next_board, depth - 1, alpha, beta, not is_maximizing, turnColor)
+            if eval_board > max_eval:
+                max_eval = eval_board
+                best_board = next_board
             alpha = max(alpha, eval_board)
             if beta <= alpha:
                 break
-        return max_eval
+        return max_eval, best_board
     else:
         min_eval = float('inf')
+        best_board = None
         opposite_color = 'w' if turnColor == 'b' else 'b'
         for next_board in valid_boards(board_array, opposite_color):
-            eval_board = minimax(next_board, depth - 1, alpha, beta, not is_maximizing, turnColor)
-            min_eval = min(min_eval, eval_board)
+            eval_board, _ = minimax(next_board, depth - 1, alpha, beta, not is_maximizing, turnColor)
+            if eval_board < min_eval:
+                min_eval = eval_board
+                best_board = next_board
             beta = min(beta, eval_board)
             if beta <= alpha:
                 break
-        return min_eval
+        return min_eval, best_board
+
 
 
 def find_valid_board_states(cur_pos=[], turn=''):
