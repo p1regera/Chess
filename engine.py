@@ -66,7 +66,49 @@ def find_valid_board_states(cur_pos=[], turn=''):
 def random_engine():
     potential_boards = find_valid_board_states()
 
-    return potential_boards[random.randint(0, len(potential_boards) - 1)]
+    return random.choice(potential_boards)
+
+
+def greedy_engine():
+    potential_boards = find_valid_board_states()
+    max_eval = [100000, 0]
+
+    for potential_board in potential_boards:
+        eval = greedy_evaluation(potential_board)
+        if eval <= max_eval[0]:
+            max_eval[0] = eval
+            max_eval[1] = potential_board
+
+    return max_eval[1]
+
+
+def greedy_evaluation(board_array):
+    eval_score = 0
+    for i in range(0,8):
+        for j in range(0, 8):
+            piece = board_array[i][j]
+            if piece == 'p':
+                eval_score -= 10
+            elif piece == 'P':
+                eval_score += 10
+            elif piece == 'n':
+                eval_score -= 30
+            elif piece == 'N':
+                eval_score += 30
+            elif piece == 'b':
+                eval_score -= 30
+            elif piece == 'B':
+                eval_score += 30
+            elif piece == 'r':
+                eval_score -= 50
+            elif piece == 'R':
+                eval_score += 50
+            elif piece == 'q':
+                eval_score -= 90
+            elif piece == 'Q':
+                eval_score += 90
+
+    return eval_score
 
 
 # def find_valid_board_states_recursive(depth, start=recursive_pos):

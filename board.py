@@ -1,6 +1,7 @@
 import pygame
 import math
 import random
+import engine
 
 from init import *
 
@@ -113,7 +114,7 @@ def CHANGE_CURRENT_POSITION(new_position):
 
 
 def ENGINE_MOVE_PIECE():
-    CHANGE_CURRENT_POSITION(random.choice(find_valid_board_states(current_position)))
+    CHANGE_CURRENT_POSITION(engine.greedy_engine())
     CHANGE_COLOR()
 
 
