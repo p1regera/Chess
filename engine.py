@@ -1,5 +1,5 @@
 import random
-import logic
+import time
 from logic import *
 
 boards = []
@@ -9,7 +9,7 @@ recursive_pos = [fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQk
 def find_valid_board_states(cur_pos=[], turn=''):
     # finds potential boards from current position
 
-    castling_flags = [logic.white_k_castle, logic.white_q_castle, logic.black_k_castle, logic.black_q_castle]
+    castling_flags = [white_k_castle, white_q_castle, black_k_castle, black_q_castle]
 
     if not turn:
         turn = board.colorTurn
@@ -69,23 +69,22 @@ def random_engine():
     return potential_boards[random.randint(0, len(potential_boards) - 1)]
 
 
-# def find_valid_board_states_recursive(depth, start=recursive_pos):
-#     if depth == 0:
-#         return boards
-#
-#     for position in find_valid_board_states([True, True, True, True], ):
-#         boards.append(position)
-#
-#     depth -= 1
-#
-#     print("depth:", depth, "# of combinations:", len(boards))
-#
-#     find_valid_board_states_recursive(depth)
+def find_valid_board_states_recursive(depth, start=recursive_pos):
+    if depth == 0:
+        return boards
+
+    for position in find_valid_board_states([True, True, True, True], ):
+        boards.append(position)
+
+    print("depth:", depth, "# of combinations:", len(boards))
+
+    find_valid_board_states_recursive(depth - 1)
 
 
 def main():
-    # find_valid_board_states_recursive(2)
-    pass
+    find_valid_board_states_recursive(2)
+    
+    time.sleep(10)
 
 
 if __name__ == '__main__':

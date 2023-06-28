@@ -1,11 +1,12 @@
 import pygame
 import math
 import random
+import time
 
 from init import *
 
 from logic import *
-from piece_movement import promote, en_passant
+# from piece_movement import promote, en_passant
 from engine import find_valid_board_states
 import copy
 
@@ -83,9 +84,13 @@ def PLAY_MOVE_SOUND():
 
     if has_captured(previous_position, current_position):
         pygame.mixer.Sound.play(captureSound)
+        if is_in_check(current_position, colorTurn) != "Neither":
+            pygame.mixer.Sound.play(checkSound)
+            return
+        return
     if castling:
         pygame.mixer.Sound.play(castlingSound)
-    elif is_in_check(current_position, colorTurn) != "Neither":
+    if is_in_check(current_position, colorTurn) != "Neither":
         pygame.mixer.Sound.play(checkSound)
     # elif hasCastled():
         # pygame.mixer.Sound.play(castleSound)
@@ -113,6 +118,9 @@ def CHANGE_CURRENT_POSITION(new_position):
 
 
 def ENGINE_MOVE_PIECE():
+    # give the engine "time to think"
+    #time.sleep(random.randrange(0, 4))
+
     CHANGE_CURRENT_POSITION(random.choice(find_valid_board_states(current_position)))
     CHANGE_COLOR()
 
@@ -184,6 +192,10 @@ def DISPLAY_PIECE_EFFECTS():
     global colorTurn, current_position
 
     if len(selectedPiece) == 1:
+        # don't display effects if a piece isn't selected / blank square is selected
+        if current_position[selectedPiece[0][0]][selectedPiece[0][1]] == '0':
+            return
+
         # don't display effects if not the proper color turn
         if colorTurn == "w" and current_position[selectedPiece[0][0]][selectedPiece[0][1]].islower():
             selectedPiece.clear()
@@ -310,6 +322,11 @@ def RESET_PIECES():
 
     pygame.mixer.Sound.play(gameStartSound)
 
+def UPDATE():
+    board.DISPLAY_PIECE_EFFECTS()
+    board.DISPLAY_PIECES()
+    board.DISPLAY_BOARD_EFFECTS()
+
 
 # helper function
 def DISPLAY_PIECE_MOVEMENT(rank, file):
@@ -324,4 +341,5 @@ def print_boards(boards, delay):
 
 
 def update_board(board_array):
+    global current_position
     current_position = board_array
