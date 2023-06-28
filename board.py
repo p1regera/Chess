@@ -1,9 +1,14 @@
 import pygame
 import math
+import random
+import engine
+
 from init import *
 
 from logic import *
 from piece_movement import promote, en_passant
+from engine import find_valid_board_states
+import copy
 
 colorTurn = 'w'
 
@@ -24,6 +29,34 @@ current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w K
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
+castling = False
+
+pygame.mixer.init()
+
+
+# load game sounds
+pygame.mixer.music.load("./sfx/gamestart.wav")
+gameStartSound = pygame.mixer.Sound("./sfx/gamestart.wav")
+pygame.mixer.Sound.play(gameStartSound)
+
+pygame.mixer.music.load("./sfx/regmove.wav")
+moveSound = pygame.mixer.Sound("./sfx/regmove.wav")
+
+pygame.mixer.music.load("./sfx/capture.wav")
+captureSound = pygame.mixer.Sound("./sfx/capture.wav")
+
+pygame.mixer.music.load("./sfx/castling.wav")
+castlingSound = pygame.mixer.Sound("./sfx/castling.wav")
+
+pygame.mixer.music.load("./sfx/check.wav")
+checkSound = pygame.mixer.Sound("./sfx/check.wav")
+
+pygame.mixer.music.load("./sfx/checkmate.wav")
+checkmateSound = pygame.mixer.Sound("./sfx/checkmate.wav")
+
+pygame.mixer.music.load("./sfx/stalemate.wav")
+stalemateSound = pygame.mixer.Sound("./sfx/stalemate.wav")
+
 isCheckmate = False
 isStalemate = False
 
@@ -51,6 +84,8 @@ def PLAY_MOVE_SOUND():
 
     if has_captured(previous_position, current_position):
         pygame.mixer.Sound.play(captureSound)
+    if castling:
+        pygame.mixer.Sound.play(castlingSound)
     elif is_in_check(current_position, colorTurn) != "Neither":
         pygame.mixer.Sound.play(checkSound)
     # elif hasCastled():
@@ -59,16 +94,31 @@ def PLAY_MOVE_SOUND():
         pygame.mixer.Sound.play(moveSound)
 
 
-def CALCULATE_PIECE_SLOPE(y1, x1, y2, x2):
-    y1 = -y1
-    y2 = -y2
+def CHANGE_COLOR():
+    global colorTurn
 
-    if x2 - x1 == 0:
-        return 0
+    if colorTurn == 'w':
+        colorTurn = 'b'
+    elif colorTurn == 'b':
+        colorTurn = 'w'
 
-    return (y1 - y2) / (x1 - x2)
+
+def CHANGE_CURRENT_POSITION(new_position):
+    global current_position
+
+    # check if board exists
+    if not new_position:
+        return
+
+    current_position = new_position
 
 
+def ENGINE_MOVE_PIECE():
+    CHANGE_CURRENT_POSITION(engine.greedy_engine())
+    CHANGE_COLOR()
+
+
+# change board position based on player input
 def MOVE_PIECES(mousePos):
     # return the modified array after an attempted move
     global previous_position, current_position, colorTurn, isCheckmate, isStalemate
@@ -85,8 +135,8 @@ def MOVE_PIECES(mousePos):
 
     if len(selectedPiece) == 2: # two squares have been selected
         sp_copy = copy.deepcopy(selectedPiece)
-        castling = is_castling(new_current_position, new_current_position[selectedPiece[0][0]][selectedPiece[0][1]],
-                               [selectedPiece[1][0], selectedPiece[1][1]])
+        # castling = is_castling(new_current_position, new_current_position[selectedPiece[0][0]][selectedPiece[0][1]],
+        #                        [selectedPiece[1][0], selectedPiece[1][1]])
         new_current_position[selectedPiece[1][0]][selectedPiece[1][1]] = new_current_position[selectedPiece[0][0]][selectedPiece[0][1]]
         new_current_position[selectedPiece[0][0]][selectedPiece[0][1]] = '0'
         selectedPiece.clear()
@@ -99,24 +149,26 @@ def MOVE_PIECES(mousePos):
         if promote_coord[0] == 0:
             new_current_position[promote_coord[0]][promote_coord[1]] = 'Q'
 
-    valid_move = is_valid_move(current_position, new_current_position, colorTurn)
+    valid_move = is_valid_move(current_position, new_current_position, colorTurn, True, False)
 
-    if valid_move or castling:
+    if valid_move:
         previous_position.append(copy.deepcopy(current_position))
         current_position = new_current_position
 
-        en_passant(previous_position[-1], sp_copy[0], sp_copy[1])
+        castling = is_castling(previous_position[-1], current_position, previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[1][0], sp_copy[1][1]])
+        castle_update(previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[0][0], sp_copy[0][1]])
 
         if castling:
             current_position = castling
 
+        en_passant(previous_position[-1], sp_copy[0], sp_copy[1])
+
         # play correct move sound
         PLAY_MOVE_SOUND()
 
-        if colorTurn == "w":
-            colorTurn = "b"
-        else:
-            colorTurn = "w"
+        # change the color turn, white to black/black to white
+        CHANGE_COLOR()
+
     if valid_move == "White Checkmated":
         isCheckmate = True
         print("White Checkmated")
@@ -270,3 +322,7 @@ def print_boards(boards, delay):
     for board in boards:
         current_position = board
         time.sleep(delay)
+
+
+def update_board(board_array):
+    current_position = board_array

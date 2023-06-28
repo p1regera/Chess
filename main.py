@@ -14,6 +14,8 @@ FPS = 300
 fpsClock = pygame.time.Clock()
 
 def main():
+    game_mode = "engine"
+
     while True:
         board.CREATE_CHESSBOARD()
 
@@ -21,10 +23,15 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+            # 2 players
             if event.type == pygame.MOUSEBUTTONDOWN and not board.isCheckmate and not board.isStalemate:
-                engine.find_valid_board_states([])
+                engine.find_valid_board_states()
                 mousePos = pygame.mouse.get_pos()
                 board.MOVE_PIECES(mousePos)
+            # if the game mode is engine, let the engine move and change the board position
+            if game_mode == "engine" and board.colorTurn == "b":
+                board.ENGINE_MOVE_PIECE()
 
 
             if event.type == pygame.KEYDOWN:
