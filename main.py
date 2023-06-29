@@ -30,7 +30,7 @@ def main():
                 mousePos = pygame.mouse.get_pos()
                 board.MOVE_PIECES(mousePos)
             # if the game mode is engine, let the engine move and change the board position
-            if game_mode == "engine" and board.colorTurn == "b":
+            if game_mode == "engine" and board.colorTurn == "b" and not board.isCheckmate and not board.isStalemate:
                 board.ENGINE_MOVE_PIECE()
 
 
