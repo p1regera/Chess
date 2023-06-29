@@ -116,6 +116,18 @@ def CHANGE_CURRENT_POSITION(new_position):
 def ENGINE_MOVE_PIECE():
     _, engine_choice = engine.minimax(current_position, 3, -math.inf, math.inf, True, 'b')
 
+    valid_move = is_valid_move(current_position, engine_choice, colorTurn, True, False)
+
+    if valid_move == "White Checkmated":
+        board.isCheckmate = True
+        print("White Checkmated")
+    if valid_move == "Black Checkmated":
+        board.isCheckmate = True
+        print("Black Checkmated")
+    if check_stalemate(colorTurn) and valid_move not in ["White Checkmated", "Black Checkmated"]:
+        board.isStalemate = True
+        print("Stalemate")
+
     CHANGE_CURRENT_POSITION(engine_choice)
     CHANGE_COLOR()
 
