@@ -60,7 +60,7 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor, update_en_passan
  
 
     # If it's not your turn, then the move is invalid
-    if (piece.islower() and turnColor == 'w') or (piece.isupper() and turnColor == 'b'):
+    if not piece or (piece.islower() and turnColor == 'w') or (piece.isupper() and turnColor == 'b'):
         return False
 
 

@@ -79,6 +79,8 @@ def COLOR_SQUARE(rank, file):
             return "White"
 
 
+# TODO: cover cases where the king is in check and the opponent castled
+
 def PLAY_MOVE_SOUND():
     global current_position, previous_position, colorTurn
 
@@ -99,7 +101,7 @@ def CHANGE_COLOR():
 
     if colorTurn == 'w':
         colorTurn = 'b'
-    elif colorTurn == 'b':
+    elif colorTurn == 'b':  
         colorTurn = 'w'
 
 
@@ -114,7 +116,7 @@ def CHANGE_CURRENT_POSITION(new_position):
 
 
 def ENGINE_MOVE_PIECE():
-    _, engine_choice = engine.minimax(current_position, 3, -math.inf, math.inf, True, 'b')
+    _, engine_choice = engine.minimax(current_position, engine.MAX_DEPTH, -math.inf, math.inf, True, 'b')
 
     valid_move = is_valid_move(current_position, engine_choice, colorTurn, True, False)
 
