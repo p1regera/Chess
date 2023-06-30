@@ -82,7 +82,6 @@ def find_valid_board_states(cur_pos=[], turn=''):
         cur_pos = board.current_position
     potential_boards = valid_boards(cur_pos, turn)
     valid_board_list = []
-    print("Color turn: " + turn)
 
     # add in 4 castling boards from current position
     # castling flags: [whiteShortCastle, whiteLongCastle, blackShortCastle, blackLongCastle]
@@ -93,30 +92,30 @@ def find_valid_board_states(cur_pos=[], turn=''):
         castling_piece = 'k'
 
     # Creates boards for the four castling positions and tests if you can castle, if so add to potential boards
-    # if castling_flags[0] and turn == 'w':
-    #     temp_board = copy.deepcopy(cur_pos)
-    #     temp_board[7][7] = 'K'
-    #     temp_board[7][4] = '0'
-    #     if is_castling(cur_pos, temp_board, castling_piece, [7, 7], False):
-    #         potential_boards.append(temp_board)
-    # if castling_flags[1] and turn == 'w':
-    #     temp_board = copy.deepcopy(cur_pos)
-    #     temp_board[7][0] = 'K'
-    #     temp_board[7][4] = '0'
-    #     if is_castling(cur_pos, temp_board, castling_piece, [7, 0], False):
-    #         potential_boards.append(temp_board)
-    # if castling_flags[2] and turn == 'b':
-    #     temp_board = copy.deepcopy(cur_pos)
-    #     temp_board[0][7] = 'k'
-    #     temp_board[0][4] = '0'
-    #     if is_castling(cur_pos, temp_board, castling_piece, [0, 7], False):
-    #         potential_boards.append(temp_board)
-    # if castling_flags[3] and turn == 'b':
-    #     temp_board = copy.deepcopy(cur_pos)
-    #     temp_board[0][0] = 'k'
-    #     temp_board[0][4] = '0'
-    #     if is_castling(cur_pos, temp_board, castling_piece, [0, 0], False):
-    #         potential_boards.append(temp_board)
+    if castling_flags[0] and turn == 'w':
+        temp_board = copy.deepcopy(cur_pos)
+        temp_board[7][7] = 'K'
+        temp_board[7][4] = '0'
+        if is_castling(cur_pos, temp_board, castling_piece, [7, 7], False):
+            potential_boards.append(temp_board)
+    if castling_flags[1] and turn == 'w':
+        temp_board = copy.deepcopy(cur_pos)
+        temp_board[7][0] = 'K'
+        temp_board[7][4] = '0'
+        if is_castling(cur_pos, temp_board, castling_piece, [7, 0], False):
+            potential_boards.append(temp_board)
+    if castling_flags[2] and turn == 'b':
+        temp_board = copy.deepcopy(cur_pos)
+        temp_board[0][7] = 'k'
+        temp_board[0][4] = '0'
+        if is_castling(cur_pos, temp_board, castling_piece, [0, 7], False):
+            potential_boards.append(temp_board)
+    if castling_flags[3] and turn == 'b':
+        temp_board = copy.deepcopy(cur_pos)
+        temp_board[0][0] = 'k'
+        temp_board[0][4] = '0'
+        if is_castling(cur_pos, temp_board, castling_piece, [0, 0], False):
+            potential_boards.append(temp_board)
 
     for potential_board in potential_boards:
         valid_move = is_valid_move(cur_pos, potential_board, turn, False, False)
