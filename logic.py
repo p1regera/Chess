@@ -45,7 +45,7 @@ def fen_to_array(fen):
 def is_valid_move(prev_board_array, cur_board_array, turnColor, update_en_passant=True, update_castling_flags=True):
     global en_passant_available
     if prev_board_array == cur_board_array:
-        return False
+        return (False, None)
     # Find which piece moves, and the starting and end position
     prev_pos = [10, 10]
     cur_pos = [10, 10]
@@ -62,7 +62,7 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor, update_en_passan
 
     # If it's not your turn, then the move is invalid
     if not piece or (piece.islower() and turnColor == 'w') or (piece.isupper() and turnColor == 'b'):
-        return False
+        return (False, None)
 
 
     # Find the piece's end position
@@ -77,13 +77,13 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor, update_en_passan
 
     # start2 = time.time_ns()
     if is_castling(prev_board_array, cur_board_array, piece, cur_pos, update_castling_flags):
-        return True
+        return (True, cur_pos)
     # end2 = time.time_ns()
 
     # start3 = time.time_ns()
     # If the piece moved to a valid position (based on what type of piece), then return true
     if cur_pos not in find_valid_moves(prev_board_array, prev_pos):
-        return False
+        return (False, None)
     # end3 = time.time_ns()
 
     # Update castling parameters
@@ -109,19 +109,19 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor, update_en_passan
     # print("Time to check check: " + str(end4 - start4))
 
     if check == "Both":
-        return False
+        return (False, None)
     if check == "White" and turnColor == 'w':
-        return False
+        return (False, None)
     if check == "Black" and turnColor == 'b':
-        return False
+        return (False, None)
     if check == "White Checkmated":
-        return "White Checkmated"
+        return ("White Checkmated", None)
     if check == "Black Checkmated":
-        return "Black Checkmated"
+        return ("Black Checkmated", None)
     if check == "Stalemate":
-        return "Stalemate"
+        return ("Stalemate", None)
 
-    return True
+    return (True, cur_pos)
 
 
 

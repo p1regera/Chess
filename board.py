@@ -11,6 +11,7 @@ from engine import find_valid_board_states
 import copy
 
 colorTurn = 'w'
+turnMove = 1
 
 # board colors
 color = None
@@ -30,6 +31,10 @@ previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
 castling = False
+
+# map coordinates to rank and file
+coord_to_rank = {0: '8', 1: '7', 2: '6', 3: '5', 4: '4', 5:'3', 6: '2', 7: '1'}
+coord_to_file = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5:'f', 6: 'g', 7: 'h'}
 
 pygame.mixer.init()
 
@@ -104,6 +109,19 @@ def CHANGE_COLOR():
     elif colorTurn == 'b':  
         colorTurn = 'w'
 
+def update_game_position_table(current_position, colorTurn, valid_move, new_piece_position):
+    global turnMove
+
+    # update the move in the text file
+    with open("game_position_table.txt", "a") as f:
+        if colorTurn == "w":
+            f.write(str(turnMove) + ". " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + " ")
+        else:
+            f.write(" " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + "\n")
+        
+        turnMove += 1
+
+    f.close()
 
 def CHANGE_CURRENT_POSITION(new_position):
     global current_position
@@ -165,11 +183,14 @@ def MOVE_PIECES(mousePos):
         if promote_coord[0] == 0:
             new_current_position[promote_coord[0]][promote_coord[1]] = 'Q'
 
-    valid_move = is_valid_move(current_position, new_current_position, colorTurn, True, False)
+    valid_move, new_piece_position = is_valid_move(current_position, new_current_position, colorTurn, True, False)
 
     if valid_move:
         previous_position.append(copy.deepcopy(current_position))
         current_position = new_current_position
+
+        # update the move in the text file
+        update_game_position_table(current_position, colorTurn, valid_move, new_piece_position)
 
         castling = is_castling(previous_position[-1], current_position, previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[1][0], sp_copy[1][1]])
         castle_update(previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[0][0], sp_copy[0][1]])

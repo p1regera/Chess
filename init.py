@@ -86,6 +86,12 @@ whiteRook = pygame.transform.scale(whiteRook, (WIDTH / 8, HEIGHT / 8))
 whitePawn = pygame.image.load("pieces/" + preferredPieces + "/wp.png")
 whitePawn = pygame.transform.scale(whitePawn, (WIDTH / 8, HEIGHT / 8))
 
+# create game_position_table text file, if not created yet
+try:
+    open("game_position_table.txt", "r")
+except FileNotFoundError:
+    open("game_position_table.txt", "w")
+
 pygame.mixer.init()
 
 # load game sounds
