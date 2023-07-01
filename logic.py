@@ -49,6 +49,7 @@ def is_valid_move(prev_board_array, cur_board_array, turnColor, update_en_passan
     # Find which piece moves, and the starting and end position
     prev_pos = [10, 10]
     cur_pos = [10, 10]
+    piece = None
 
     # Find the piece's start position
     for i in range(0, 8):

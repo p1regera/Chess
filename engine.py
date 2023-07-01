@@ -77,7 +77,9 @@ queen_table = [
     [20, 10, 10, 5, 5, 10, 10, 20]
 ]
 
-# queen_table.reverse() 
+
+# queen_table.reverse()
+
 
 king_table = [
     [30, 40, 40, 50, 50, 40, 40, 30],
@@ -114,6 +116,12 @@ def evaluate_board(board_array, turnColor):
     mobility_score = 0
     pawn_structure_score = 0
 
+    # original squares for the bishops, knights, and rooks
+    white_original_squares = ['a1', 'b1', 'c1', 'f1', 'g1', 'h1']
+    black_original_squares = ['a8', 'b8', 'c8', 'f8', 'g8', 'h8']
+
+    development_score = 0
+
     score = 0
     for i in range(8):
         for j in range(8):
@@ -149,7 +157,20 @@ def evaluate_board(board_array, turnColor):
                     score += king_end_game_table[i][j] if piece.isupper() else -king_end_game_table[7-i][7-j]
 
 
-    normalized_score = (score + mobility_score + pawn_structure_score) / 100
+
+    for i in range(8):
+        for j in range(8):
+            piece = board_array[i][j]
+            
+            # check if the piece is a bishop, knight, or rook and if it's still on its original square
+            if piece in ['N', 'B', 'R', 'n', 'b', 'r']:
+                if piece.isupper() and (i, j) in white_original_squares:
+                    development_score -= 100
+                elif piece.islower() and (i, j) in black_original_squares:
+                    development_score -= 100
+
+
+    normalized_score = (score + mobility_score + pawn_structure_score + development_score) / 100
 
     # print(f"score: {normalized_score}")
 
