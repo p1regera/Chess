@@ -165,9 +165,9 @@ def evaluate_board(board_array, turnColor):
             # check if the piece is a bishop, knight, or rook and if it's still on its original square
             if piece in ['N', 'B', 'R', 'n', 'b', 'r']:
                 if piece.isupper() and (i, j) in white_original_squares:
-                    development_score -= 100
+                    development_score -= 200
                 elif piece.islower() and (i, j) in black_original_squares:
-                    development_score -= 100
+                    development_score -= 200
 
 
     normalized_score = (score + mobility_score + pawn_structure_score + development_score) / 100

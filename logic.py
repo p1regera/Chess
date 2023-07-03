@@ -42,6 +42,27 @@ def fen_to_array(fen):
     return board_array
 
 
+# STRICTLY FOR BLACK - THE FEN HAS A "b" TO INDICATE IT IS BLACK'S TURN
+def array_to_fen(board_array):
+    fen = ''
+    for i in range(8):
+        empty = 0
+        for j in range(8):
+            if board_array[i][j] == "0":
+                empty += 1
+            else:
+                if empty != 0:
+                    fen += str(empty)
+                    empty = 0
+                fen += board_array[i][j]
+        if empty != 0:
+            fen += str(empty)
+        if i != 7:
+            fen += '/'
+    fen += ' b KQkq - 0 1'
+    return fen
+
+
 def is_valid_move(prev_board_array, cur_board_array, turnColor, update_en_passant=True, update_castling_flags=True):
     global en_passant_available
     if prev_board_array == cur_board_array:
