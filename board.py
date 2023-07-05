@@ -2,6 +2,7 @@ import pygame
 import math
 import random
 import engine
+import polyglot
 
 from init import *
 
@@ -134,19 +135,22 @@ def CHANGE_CURRENT_POSITION(new_position):
 
 
 def ENGINE_MOVE_PIECE():
-    _, engine_choice = engine.minimax(current_position, engine.MAX_DEPTH, -math.inf, math.inf, True, 'b')
 
-    valid_move = is_valid_move(current_position, engine_choice, colorTurn, True, False)
-
-    if valid_move == "White Checkmated":
-        board.isCheckmate = True
-        print("White Checkmated")
-    if valid_move == "Black Checkmated":
-        board.isCheckmate = True
-        print("Black Checkmated")
-    if check_stalemate(colorTurn) and valid_move not in ["White Checkmated", "Black Checkmated"]:
-        board.isStalemate = True
-        print("Stalemate")
+    move = polyglot.get_best_move(array_to_fen(current_position))
+    if move is not None:
+        engine_choice = fen_to_array(move)
+    else:
+        _, engine_choice = engine.minimax(current_position, engine.MAX_DEPTH, -math.inf, math.inf, True, 'b')
+        valid_move = is_valid_move(current_position, engine_choice, colorTurn, True, False) # need to put this outside of the else statement to check for checkmate/stalemate
+        if valid_move == "White Checkmated":
+            board.isCheckmate = True
+            print("White Checkmated")
+        if valid_move == "Black Checkmated":
+            board.isCheckmate = True
+            print("Black Checkmated")
+        if check_stalemate(colorTurn) and valid_move not in ["White Checkmated", "Black Checkmated"]:
+            board.isStalemate = True
+            print("Stalemate")
 
     CHANGE_CURRENT_POSITION(engine_choice)
     CHANGE_COLOR()
