@@ -28,6 +28,7 @@ captureRed = (247, 100, 99)
 
 # board variables
 current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+current_position = fen_to_array("rnb2bnr/pppp1ppp/7k/4pQ2/4P3/q4N2/PPPP1PPP/RNB1KB1R w KQ - 0 1") # testing purposes
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
@@ -110,19 +111,19 @@ def CHANGE_COLOR():
     elif colorTurn == 'b':  
         colorTurn = 'w'
 
-def update_game_position_table(current_position, colorTurn, valid_move, new_piece_position):
-    global turnMove
+# def update_game_position_table(current_position, colorTurn, valid_move, new_piece_position):
+#     global turnMove
 
-    # update the move in the text file
-    with open("game_position_table.txt", "a") as f:
-        if colorTurn == "w":
-            f.write(str(turnMove) + ". " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + " ")
-        else:
-            f.write(" " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + "\n")
+#     # update the move in the text file
+#     with open("game_position_table.txt", "a") as f:
+#         if colorTurn == "w":
+#             f.write(str(turnMove) + ". " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + " ")
+#         else:
+#             f.write(" " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + "\n")
         
-        turnMove += 1
+#         turnMove += 1
 
-    f.close()
+#     f.close()
 
 def CHANGE_CURRENT_POSITION(new_position):
     global current_position
@@ -141,19 +142,19 @@ def ENGINE_MOVE_PIECE():
         engine_choice = fen_to_array(move)
     else:
         _, engine_choice = engine.minimax(current_position, engine.MAX_DEPTH, -math.inf, math.inf, True, 'b')
-        valid_move = is_valid_move(current_position, engine_choice, colorTurn, True, False) # need to put this outside of the else statement to check for checkmate/stalemate
-        if valid_move == "White Checkmated":
-            board.isCheckmate = True
-            print("White Checkmated")
-        if valid_move == "Black Checkmated":
-            board.isCheckmate = True
-            print("Black Checkmated")
-        if check_stalemate(colorTurn) and valid_move not in ["White Checkmated", "Black Checkmated"]:
-            board.isStalemate = True
-            print("Stalemate")
-
-    CHANGE_CURRENT_POSITION(engine_choice)
+    valid_move = is_valid_move(current_position, engine_choice, colorTurn, True, False)[0] # need to put this outside of the else statement to check for checkmate/stalemate
+    print(valid_move)
+    if valid_move == "White Checkmated":
+        board.isCheckmate = True
+        print("White Checkmated")
+    if valid_move == "Black Checkmated":
+        board.isCheckmate = True
+        print("Black Checkmated")
+    if check_stalemate(colorTurn) and valid_move not in ["White Checkmated", "Black Checkmated"]:
+        board.isStalemate = True
+        print("Stalemate")
     CHANGE_COLOR()
+    CHANGE_CURRENT_POSITION(engine_choice)
 
 
 # change board position based on player input
@@ -188,13 +189,14 @@ def MOVE_PIECES(mousePos):
             new_current_position[promote_coord[0]][promote_coord[1]] = 'Q'
 
     valid_move, new_piece_position = is_valid_move(current_position, new_current_position, colorTurn, True, False)
+    print("BRUHH")
 
     if valid_move:
         previous_position.append(copy.deepcopy(current_position))
         current_position = new_current_position
 
         # update the move in the text file
-        update_game_position_table(current_position, colorTurn, valid_move, new_piece_position)
+        # update_game_position_table(current_position, colorTurn, valid_move, new_piece_position)
 
         castling = is_castling(previous_position[-1], current_position, previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[1][0], sp_copy[1][1]])
         castle_update(previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[0][0], sp_copy[0][1]])
