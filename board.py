@@ -115,10 +115,10 @@ def update_game_position_table(current_position, colorTurn, valid_move, new_piec
 
     # update the move in the text file
     with open("game_position_table.txt", "a") as f:
-        if colorTurn == "w":
-            f.write(str(turnMove) + ". " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + " ")
-        else:
-            f.write(" " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + "\n")
+        # if colorTurn == "w":
+        #     f.write(str(turnMove) + ". " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + " ")
+        # else:
+        #     f.write(" " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + "\n")
         
         turnMove += 1
 
@@ -139,6 +139,12 @@ def ENGINE_MOVE_PIECE():
     move = polyglot.get_best_move(array_to_fen(current_position))
     if move is not None:
         engine_choice = fen_to_array(move)
+
+        # introduce a slight delay between 0 seconds and 1.5 seconds to give the appearance of the computer thinking
+        delay = random.uniform(0, 1.5)
+        time.sleep(delay)
+        
+
     else:
         _, engine_choice = engine.minimax(current_position, engine.MAX_DEPTH, -math.inf, math.inf, True, 'b')
         valid_move = is_valid_move(current_position, engine_choice, colorTurn, True, False) # need to put this outside of the else statement to check for checkmate/stalemate
