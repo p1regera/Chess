@@ -111,19 +111,19 @@ def CHANGE_COLOR():
     elif colorTurn == 'b':  
         colorTurn = 'w'
 
-# def update_game_position_table(current_position, colorTurn, valid_move, new_piece_position):
-#     global turnMove
+def update_game_position_table(current_position, colorTurn, valid_move, new_piece_position):
+    global turnMove
 
-#     # update the move in the text file
-#     with open("game_position_table.txt", "a") as f:
-#         if colorTurn == "w":
-#             f.write(str(turnMove) + ". " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + " ")
-#         else:
-#             f.write(" " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + "\n")
+    # update the move in the text file
+    with open("game_position_table.txt", "a") as f:
+        if colorTurn == "w":
+            f.write(str(turnMove) + ". " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + " ")
+        else:
+            f.write(" " + current_position[new_piece_position[0]][new_piece_position[1]] + (coord_to_file[new_piece_position[0]]) + coord_to_rank[new_piece_position[1]] + "\n")
         
-#         turnMove += 1
+        turnMove += 1
 
-#     f.close()
+    f.close()
 
 def CHANGE_CURRENT_POSITION(new_position):
     global current_position
@@ -196,7 +196,7 @@ def MOVE_PIECES(mousePos):
         current_position = new_current_position
 
         # update the move in the text file
-        # update_game_position_table(current_position, colorTurn, valid_move, new_piece_position)
+        update_game_position_table(current_position, colorTurn, valid_move, new_piece_position)
 
         castling = is_castling(previous_position[-1], current_position, previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[1][0], sp_copy[1][1]])
         castle_update(previous_position[-1][sp_copy[0][0]][sp_copy[0][1]], [sp_copy[0][0], sp_copy[0][1]])
