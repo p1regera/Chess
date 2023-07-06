@@ -78,8 +78,14 @@ def main():
                 board.MOVE_PIECES(mousePos)
             # if the game mode is engine, let the engine move and change the board position
             if game_mode == "engine" and board.colorTurn == "b" and not board.isCheckmate and not board.isStalemate:
-                board.ENGINE_MOVE_PIECE()
+                board.DISPLAY_PIECE_EFFECTS()
+                board.DISPLAY_PIECES()
+                board.DISPLAY_BOARD_EFFECTS()
+                pygame.display.update()
+                fpsClock.tick(FPS)
 
+                board.ENGINE_MOVE_PIECE()
+                board.PLAY_MOVE_SOUND()
 
             if event.type == pygame.KEYDOWN:
                 # press R to reset board to starting position
