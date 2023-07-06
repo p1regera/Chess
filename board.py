@@ -28,7 +28,7 @@ captureRed = (247, 100, 99)
 
 # board variables
 current_position = fen_to_array("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-current_position = fen_to_array("rnb2bnr/pppp1ppp/7k/4pQ2/4P3/q4N2/PPPP1PPP/RNB1KB1R w KQ - 0 1") # testing purposes
+# current_position = fen_to_array("rnb2bnr/pppp1ppp/7k/4pQ2/4P3/q4N2/PPPP1PPP/RNB1KB1R w KQ - 0 1") # testing purposes
 previous_position = []
 colorTurn = "w"
 selectedPiece = []  # first position is the square being selected, second position is the square it is being moved to
@@ -135,9 +135,9 @@ def CHANGE_CURRENT_POSITION(new_position):
     current_position = new_position
 
 
-def ENGINE_MOVE_PIECE():
+def ENGINE_MOVE_PIECE(opening_book):
 
-    move = polyglot.get_best_move(array_to_fen(current_position))
+    move = polyglot.get_best_move(array_to_fen(current_position), opening_book)
     if move is not None:
         engine_choice = fen_to_array(move)
 
