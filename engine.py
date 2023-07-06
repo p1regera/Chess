@@ -274,7 +274,7 @@ def find_valid_board_states(cur_pos=[], turn=''):
             potential_boards.append(temp_board)
 
     for potential_board in potential_boards:
-        valid_move = is_valid_move(cur_pos, potential_board, turn, False, False)
+        valid_move = is_valid_move(cur_pos, potential_board, turn, False, False)[0]
         if valid_move:
             # If valid, next check to see if a pawn needs promotion (only checking black for engine)
             promote_coord = promote(potential_board)

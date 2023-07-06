@@ -166,108 +166,108 @@ def find_valid_moves(board_array, piece_pos):
         return []
 
 
-# def is_in_check(board_array, turnColor):
-#     # Returns White/Black/Both/None depending on which king(s) are in check
-#     # Find the kings
-#     white_king_pos = []
-#     white_valid_moves = []
-#     black_king_pos = []
-#     black_valid_moves = []
-#     for i in range(0, 8):
-#         for j in range(0, 8):
-#             cur_piece = board_array[i][j]
-#             if cur_piece == 'K':
-#                 white_king_pos = [i, j]
-#             elif cur_piece == 'k':
-#                 black_king_pos = [i, j]
-#             if cur_piece.isupper():
-#                 for coord in find_valid_moves(board_array, [i, j]):
-#                     white_valid_moves.append(coord)
-#             elif cur_piece.islower():
-#                 for coord in find_valid_moves(board_array, [i, j]):
-#                     black_valid_moves.append(coord)
-
-#     # print("WM", white_valid_moves)
-#     # print("BM", black_valid_moves)
-#     # print("WK:", white_king_pos)
-#     # print( "BK:", black_king_pos)
-#     # print("====================")
-
-#     white_checked = False
-#     black_checked = False
-
-#     if white_king_pos in black_valid_moves:
-#         white_checked = True
-#     if black_king_pos in white_valid_moves:
-#         black_checked = True
-
-#     if white_checked and black_checked:
-#         return "Both"
-
-#     if white_checked:
-#         if turnColor == 'b':
-#             checkmate = True
-#             for board in valid_boards(board_array, 'w'):
-#                 if is_in_check(board, 'w') in ["Black", "Neither"]:
-#                     # Debugging purposes
-#                     # print('\n'.join(' '.join(str(x) for x in row) for row in board))
-#                     # print(is_in_check(board, 'w'))
-#                     # print("=================")
-#                     checkmate = False
-#                     break
-#             if checkmate:
-#                 return "White Checkmated"
-#         return "White"
-
-#     if black_checked:
-#         if black_checked:
-#             if turnColor == 'w':
-#                 checkmate = True
-#                 for board in valid_boards(board_array, 'b'):
-#                     if is_in_check(board, 'b') in ["White", "Neither"]:
-#                         # Debugging purposes
-#                         # print('\n'.join(' '.join(str(x) for x in row) for row in board))
-#                         # print(is_in_check(board, 'b'))
-#                         # print("=================")
-#                         checkmate = False
-#                         break
-#                 if checkmate:
-#                     return "Black Checkmated"
-#         return "Black"
-#     else:
-#         return "Neither"
-
-
 def is_in_check(board_array, turnColor):
-    king_pos = {'K': None, 'k': None}
-    opponent_valid_moves = set()
-    opponent_pieces = 'abcdefghijklmnopqrstuvwxyz' if turnColor == 'w' else 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-    # Find the kings and calculate valid moves for opponent's pieces
-    for i in range(8):
-        for j in range(8):
+    # Returns White/Black/Both/None depending on which king(s) are in check
+    # Find the kings
+    white_king_pos = []
+    white_valid_moves = []
+    black_king_pos = []
+    black_valid_moves = []
+    for i in range(0, 8):
+        for j in range(0, 8):
             cur_piece = board_array[i][j]
-            if cur_piece == 'K' or cur_piece == 'k':
-                king_pos[cur_piece] = [i, j]
-            if cur_piece in opponent_pieces:
+            if cur_piece == 'K':
+                white_king_pos = [i, j]
+            elif cur_piece == 'k':
+                black_king_pos = [i, j]
+            if cur_piece.isupper():
                 for coord in find_valid_moves(board_array, [i, j]):
-                    opponent_valid_moves.add(tuple(coord))
+                    white_valid_moves.append(coord)
+            elif cur_piece.islower():
+                for coord in find_valid_moves(board_array, [i, j]):
+                    black_valid_moves.append(coord)
 
-    # Check if kings are under attack
-    king_checked = { 'K': tuple(king_pos['K']) in opponent_valid_moves if king_pos['K'] else False,
-                 'k': tuple(king_pos['k']) in opponent_valid_moves if king_pos['k'] else False }
+    # print("WM", white_valid_moves)
+    # print("BM", black_valid_moves)
+    # print("WK:", white_king_pos)
+    # print( "BK:", black_king_pos)
+    # print("====================")
 
+    white_checked = False
+    black_checked = False
 
-    # Additional logic for checkmate/stalemate would go here...
+    if white_king_pos in black_valid_moves:
+        white_checked = True
+    if black_king_pos in white_valid_moves:
+        black_checked = True
 
-    if king_checked['K'] and king_checked['k']:
+    if white_checked and black_checked:
         return "Both"
-    elif king_checked['K']:
+
+    if white_checked:
+        if turnColor == 'b':
+            checkmate = True
+            for board in valid_boards(board_array, 'w'):
+                if is_in_check(board, 'w') in ["Black", "Neither"]:
+                    # Debugging purposes
+                    # print('\n'.join(' '.join(str(x) for x in row) for row in board))
+                    # print(is_in_check(board, 'w'))
+                    # print("=================")
+                    checkmate = False
+                    break
+            if checkmate:
+                return "White Checkmated"
         return "White"
-    elif king_checked['k']:
+
+    if black_checked:
+        if black_checked:
+            if turnColor == 'w':
+                checkmate = True
+                for board in valid_boards(board_array, 'b'):
+                    if is_in_check(board, 'b') in ["White", "Neither"]:
+                        # Debugging purposes
+                        # print('\n'.join(' '.join(str(x) for x in row) for row in board))
+                        # print(is_in_check(board, 'b'))
+                        # print("=================")
+                        checkmate = False
+                        break
+                if checkmate:
+                    return "Black Checkmated"
         return "Black"
     else:
         return "Neither"
+
+
+# def is_in_check(board_array, turnColor):
+#     king_pos = {'K': None, 'k': None}
+#     opponent_valid_moves = set()
+#     opponent_pieces = 'abcdefghijklmnopqrstuvwxyz' if turnColor == 'w' else 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+#     # Find the kings and calculate valid moves for opponent's pieces
+#     for i in range(8):
+#         for j in range(8):
+#             cur_piece = board_array[i][j]
+#             if cur_piece == 'K' or cur_piece == 'k':
+#                 king_pos[cur_piece] = [i, j]
+#             if cur_piece in opponent_pieces:
+#                 for coord in find_valid_moves(board_array, [i, j]):
+#                     opponent_valid_moves.add(tuple(coord))
+
+#     # Check if kings are under attack
+#     king_checked = { 'K': tuple(king_pos['K']) in opponent_valid_moves if king_pos['K'] else False,
+#                  'k': tuple(king_pos['k']) in opponent_valid_moves if king_pos['k'] else False }
+
+
+#     # Additional logic for checkmate/stalemate would go here...
+
+#     if king_checked['K'] and king_checked['k']:
+#         return "Both"
+#     elif king_checked['K']:
+#         return "White"
+#     elif king_checked['k']:
+#         return "Black"
+#     else:
+#         return "Neither"
 
 
 
@@ -278,11 +278,11 @@ def check_stalemate(colorTurn):
     stalemate_black = True
 
     for move in white_moves:
-        if is_valid_move(board.current_position, move, 'w', False, False):
+        if is_valid_move(board.current_position, move, 'w', False, False)[0]:
             stalemate_white = False
 
     for move in black_moves:
-        if is_valid_move(board.current_position, move, 'b', False, False):
+        if is_valid_move(board.current_position, move, 'b', False, False)[0]:
             stalemate_black = False
 
     if (stalemate_white and colorTurn == 'w') or (stalemate_black and colorTurn == 'b'):
