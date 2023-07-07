@@ -134,9 +134,9 @@ def CHANGE_CURRENT_POSITION(new_position):
     current_position = new_position
 
 
-def ENGINE_MOVE_PIECE():
+def ENGINE_MOVE_PIECE(opening_book):
 
-    move = polyglot.get_best_move(array_to_fen(current_position))
+    move = polyglot.get_best_move(array_to_fen(current_position), opening_book)
     if move is not None:
         engine_choice = fen_to_array(move)
 
@@ -145,7 +145,7 @@ def ENGINE_MOVE_PIECE():
         time.sleep(delay)
     else:
         _, engine_choice = engine.minimax(current_position, engine.MAX_DEPTH, -math.inf, math.inf, True, 'b')
-    valid_move = is_valid_move(current_position, engine_choice, colorTurn, True, True)[0] # need to put this outside of the else statement to check for checkmate/stalemate
+    valid_move = is_valid_move(current_position, engine_choice, colorTurn, True, True)[0]
     if valid_move == "White Checkmated":
         board.isCheckmate = True
         print("White Checkmated")

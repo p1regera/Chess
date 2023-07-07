@@ -8,6 +8,16 @@ RECT_HEIGHT = (HEIGHT - OFFSET) / 8
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 TRANSPARENT = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
 
+# background / buttons
+bg_image = pygame.image.load('./assets/mainscreen.png')
+bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
+
+twoplayer_img = pygame.image.load('./assets/2player.png')
+twoplayer_img = pygame.transform.scale(twoplayer_img, (WIDTH / 3, HEIGHT / 8))
+
+engine_img = pygame.image.load('./assets/engine.png')
+engine_img = pygame.transform.scale(engine_img, (WIDTH / 3, HEIGHT / 8))
+
 # game status
 bMate = pygame.image.load("./effects/bMate.png")
 bMate = pygame.transform.scale(bMate, (WIDTH / 24, HEIGHT / 24))

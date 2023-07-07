@@ -1,13 +1,13 @@
 import chess
 import chess.polyglot
 
-def get_best_move(fen_string):
+def get_best_move(fen_string, opening_book):
     castling_options = [' b KQkq - 0 1', ' b KQk - 0 1', ' b KQq - 0 1', ' b KQ - 0 1']
     best_move = None
     best_weight = 0
     best_new_fen = None
-
-    with chess.polyglot.open_reader("openingbooks/lichess_huge.bin") as reader:
+    engine_file = "openingbooks/" + opening_book + ".bin"
+    with chess.polyglot.open_reader(engine_file) as reader:
         for castle_option in castling_options:
             fen = fen_string + castle_option
             board = chess.Board(fen)
@@ -47,5 +47,3 @@ def get_best_move(fen_string):
 #         except IndexError:
 #             print("No opening move found in book.")
 #             new_fen = None
-
-#     return new_fen
