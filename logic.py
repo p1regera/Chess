@@ -59,7 +59,6 @@ def array_to_fen(board_array):
             fen += str(empty)
         if i != 7:
             fen += '/'
-    fen += ' b KQkq - 0 1'
     return fen
 
 
