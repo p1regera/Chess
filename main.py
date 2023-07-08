@@ -28,7 +28,7 @@ def main():
     button_height = board.HEIGHT / 8
 
     # Initialize button states
-    button_states = {1: False, 2: False, 3: False}
+    button_states = {1: True, 2: False, 3: False}
 
     # Create buttons
     button1 = pygame.Rect(board.WIDTH / 6 - button_width / 2, board.HEIGHT - board.HEIGHT / 8, button_width, button_height)

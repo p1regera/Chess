@@ -2,7 +2,7 @@ import chess
 import chess.polyglot
 
 def get_best_move(fen_string, opening_book):
-    castling_options = [' b KQkq - 0 1', ' b KQk - 0 1', ' b KQq - 0 1', ' b KQ - 0 1']
+    castling_options = [' b KQkq - 0 1', ' b KQk - 0 1', ' b KQq - 0 1', ' b KQ - 0 1', ' b K - 0 1', ' b Qkq - 0 1', ' b Qk - 0 1', ' b Qq - 0 1', ' b Q - 0 1', ' b kq - 0 1', ' b k - 0 1', ' b q - 0 1', ' b - - 0 1']
     best_move = None
     best_weight = 0
     best_new_fen = None
