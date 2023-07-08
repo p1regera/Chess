@@ -64,7 +64,7 @@ def array_to_fen(board_array):
 
 def is_valid_move(prev_board_array, cur_board_array, turnColor, update_en_passant=True, update_castling_flags=True):
     global en_passant_available
-    if prev_board_array == cur_board_array:
+    if prev_board_array == cur_board_array or type(cur_board_array) == type(None):
         return (False, None)
     # Find which piece moves, and the starting and end position
     prev_pos = [10, 10]
